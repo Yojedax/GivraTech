@@ -19,8 +19,8 @@ const estadoStyle: Record<string, { bg: string; color: string }> = {
 
 function ClientRow({ c }: { c: typeof retentionClients[0] }) {
   const [open, setOpen] = useState(false)
-  const rs = riskStyle[c.riesgo as keyof typeof riskStyle] ?? riskStyle.Bajo
-  const es = estadoStyle[c.estado] ?? estadoStyle.Pendiente
+  const rs = riskStyle[c.riesgo as keyof typeof riskStyle] ?? riskStyle.Low
+  const es = estadoStyle[c.estado] ?? estadoStyle['Pending']
 
   return (
     <>
