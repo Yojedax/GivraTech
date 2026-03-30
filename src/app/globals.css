@@ -1,0 +1,152 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --neon: #00d4ff;
+  --neon-dark: #0099cc;
+  --neon-light: #33e0ff;
+  --neon-glow: rgba(0, 212, 255, 0.15);
+  --neon-glow-strong: rgba(0, 212, 255, 0.3);
+
+  --surface-0: #06080d;
+  --surface-1: #0a0e18;
+  --surface-2: #0f1420;
+  --surface-3: #151c2c;
+  --surface-4: #1c2538;
+
+  --text-primary: #e8edf5;
+  --text-secondary: #8892a8;
+  --text-muted: #556178;
+
+  --border: rgba(255, 255, 255, 0.06);
+  --border-light: rgba(255, 255, 255, 0.1);
+  --border-neon: rgba(0, 212, 255, 0.2);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--surface-0);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--surface-0); }
+::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
+
+@layer utilities {
+  .section-pad { @apply py-20 lg:py-28; }
+  .container-tight { @apply max-w-5xl mx-auto px-6; }
+  .container-wide { @apply max-w-7xl mx-auto px-6; }
+}
+
+/* Cards */
+.card {
+  background: var(--surface-2);
+  border-radius: 16px;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 0 0 0 transparent;
+  transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+.card:hover {
+  border-color: var(--border-neon);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.07), 0 8px 32px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.badge-neon { background: var(--neon-glow); color: var(--neon); }
+.badge-neutral { background: rgba(255,255,255,0.05); color: var(--text-secondary); }
+
+/* Risk colors */
+.risk-high   { background: rgba(239,68,68,0.15); color: #f87171; }
+.risk-medium { background: rgba(234,179,8,0.15);  color: #facc15; }
+.risk-low    { background: rgba(34,197,94,0.15);  color: #4ade80; }
+
+/* Demo tabs */
+.demo-tab {
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+}
+.demo-tab.active {
+  background: var(--neon-glow);
+  color: var(--neon);
+  border-color: var(--border-neon);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+}
+.demo-tab:not(.active):hover {
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.04);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--neon) 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animate pulse soft */
+@keyframes pulseSoft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.animate-pulse-soft { animation: pulseSoft 2.5s ease-in-out infinite; }
+
+/* Neon glow animation */
+@keyframes neonPulse {
+  0%, 100% { box-shadow: 0 0 15px rgba(0,212,255,0.15), 0 0 30px rgba(0,212,255,0.05); }
+  50% { box-shadow: 0 0 25px rgba(0,212,255,0.25), 0 0 50px rgba(0,212,255,0.1); }
+}
+.animate-neon-pulse { animation: neonPulse 3s ease-in-out infinite; }
+
+/* Grid pattern bg */
+.bg-grid {
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Recharts custom */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: var(--surface-3) !important;
+  border: 1px solid var(--border-light) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+  font-size: 12px !important;
+  color: var(--text-primary) !important;
+}
