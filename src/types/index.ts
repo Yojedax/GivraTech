@@ -25,7 +25,7 @@ export interface RFMClient {
   impactoPotencial: number;
 }
 export type RFMSegment = "Champions" | "Loyal" | "At Risk" | "Lost" | "New" | "Potential";
-export type Canal = "eCommerce" | "Store" | "App" | "Phone";
+export type Canal = "eCommerce" | "Store" | "Branch" | "App" | "Phone";
 
 export interface SegmentStat {
   segmento: RFMSegment;
