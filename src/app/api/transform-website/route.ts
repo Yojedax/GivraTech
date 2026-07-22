@@ -7,54 +7,54 @@ export async function POST(req: NextRequest) {
     const { url } = await req.json()
 
     if (!url) {
-      return NextResponse.json({ error: 'URL required' }, { status: 400 })
+      return NextResponse.json({ error: 'URL requerida' }, { status: 400 })
     }
 
     const apiKey = process.env.ANTHROPIC_API_KEY
     if (!apiKey) {
-      return NextResponse.json({ error: 'API key not configured' }, { status: 500 })
+      return NextResponse.json({ error: 'API key no configurada' }, { status: 500 })
     }
 
-    const prompt = `You are an expert consultant in data & AI for business. A potential client shared the URL of their website with you: ${url}
+    const prompt = `Eres un consultor experto en datos e IA para negocios. Un cliente potencial compartió contigo la URL de su sitio web: ${url}
 
-Based on the URL and domain, infer the type of company, industry, and business processes they likely have. Generate an analysis of how GivraTech (a data & AI consulting firm) could transform that company.
+A partir de la URL y el dominio, infiere el tipo de empresa, la industria y los procesos de negocio que probablemente tenga. Genera un análisis de cómo GivraTech (una consultora de datos e IA) podría transformar esa empresa.
 
-Respond ONLY with valid JSON with this exact structure, no additional text:
+Responde ÚNICAMENTE con JSON válido con esta estructura exacta, sin texto adicional:
 {
-  "original": "Brief description of how the company appears today (2-3 sentences, executive language)",
-  "improved": "Vision of how the company would be after implementing data & AI solutions with GivraTech (3-4 sentences, focus on business impact)",
+  "original": "Breve descripción de cómo se ve la empresa hoy (2-3 oraciones, lenguaje ejecutivo)",
+  "improved": "Visión de cómo sería la empresa tras implementar soluciones de datos e IA con GivraTech (3-4 oraciones, enfocado en impacto de negocio)",
   "improvements": [
-    "Concrete improvement 1 with quantifiable impact",
-    "Concrete improvement 2 with quantifiable impact",
-    "Concrete improvement 3 with quantifiable impact",
-    "Concrete improvement 4 with quantifiable impact"
+    "Mejora concreta 1 con impacto cuantificable",
+    "Mejora concreta 2 con impacto cuantificable",
+    "Mejora concreta 3 con impacto cuantificable",
+    "Mejora concreta 4 con impacto cuantificable"
   ],
   "useCases": [
     {
-      "title": "Name of the use case",
-      "description": "Description of the solution in 2 sentences",
-      "kpi": "Expected quantifiable impact"
+      "title": "Nombre del caso de uso",
+      "description": "Descripción de la solución en 2 oraciones",
+      "kpi": "Impacto cuantificable esperado"
     },
     {
-      "title": "Name of use case 2",
-      "description": "Description of the solution in 2 sentences",
-      "kpi": "Expected quantifiable impact"
+      "title": "Nombre del caso de uso 2",
+      "description": "Descripción de la solución en 2 oraciones",
+      "kpi": "Impacto cuantificable esperado"
     },
     {
-      "title": "Name of use case 3",
-      "description": "Description of the solution in 2 sentences",
-      "kpi": "Expected quantifiable impact"
+      "title": "Nombre del caso de uso 3",
+      "description": "Descripción de la solución en 2 oraciones",
+      "kpi": "Impacto cuantificable esperado"
     },
     {
-      "title": "Name of use case 4",
-      "description": "Description of the solution in 2 sentences",
-      "kpi": "Expected quantifiable impact"
+      "title": "Nombre del caso de uso 4",
+      "description": "Descripción de la solución en 2 oraciones",
+      "kpi": "Impacto cuantificable esperado"
     }
   ],
-  "estimate": "Estimate of initial investment and typical timeline for a company of this type (1-2 sentences, broad range, without committing to prices)"
+  "estimate": "Estimación de la inversión inicial y el plazo típico para una empresa de este tipo (1-2 oraciones, rango amplio, sin comprometer precios)"
 }
 
-Use professional English language, focus on business impact, avoid excessive technical jargon. KPIs should be concrete (percentages, times, costs).`
+Usa lenguaje profesional en español, enfócate en el impacto de negocio y evita la jerga técnica excesiva. Los KPIs deben ser concretos (porcentajes, tiempos, costos).`
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -85,7 +85,7 @@ Use professional English language, focus on business impact, avoid excessive tec
   } catch (err) {
     console.error('Transform error:', err)
     return NextResponse.json(
-      { error: 'Could not process the request' },
+      { error: 'No se pudo procesar la solicitud' },
       { status: 500 }
     )
   }

@@ -1,0 +1,392 @@
+{
+  "name": "GivraTech WF5 — Follow-up Automático",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "n8n-wf5-manual",
+      "name": "Start Manual",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "id": "n8n-wf5-schedule",
+      "name": "Schedule Diario 9AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        500
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_TABLE_ID"
+        },
+        "filterByFormula": "=AND(OR({Status}='CONTACTED', {Status}='FOLLOW_UP_1', {Status}='FOLLOW_UP_2'), DATETIME_DIFF(NOW(), {Last Contact}, 'days') >= 3)",
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "n8n-wf5-read",
+      "name": "Get Leads for Follow-up",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        280,
+        400
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CRED_ID",
+          "name": "Airtable GivraTech"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-fu-leads",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "n8n-wf5-hasleads",
+      "name": "Has Leads?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        520,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const f = item.json.fields || item.json;\n  const status = f['Status'] || '';\n  const fuCount = parseInt(f['Follow Up Count'] || '0', 10);\n  const name = f['Name'] || '';\n  const company = f['Company'] || '';\n  const product = f['Product Primary'] || '';\n  const painPoints = f['Pain Points'] || '';\n  const originalMessage = f['Outreach Message'] || '';\n  const channel = f['Outreach Channel'] || 'email';\n  const email = f['Email'] || '';\n\n  let step = fuCount + 1;\n  if (step > 3) step = 3; // cap at breakup\n\n  let promptInstruction = '';\n  if (step === 1) {\n    promptInstruction = 'This is follow-up #1 (3 days after first contact). Add NEW value: share a relevant stat, insight, or case study for their industry. Do NOT repeat the original pitch.';\n  } else if (step === 2) {\n    promptInstruction = 'This is follow-up #2 (7 days after first contact). Change angle: ask about a different pain point or share a different perspective. Keep it short.';\n  } else {\n    promptInstruction = 'This is the FINAL follow-up #3 (breakup email). Use \"I was about to close your file, but before that...\" approach. Ultra-concise last value proposition. After this, the lead will be marked as COLD.';\n  }\n\n  const prompt = `Generate a follow-up message for a B2B lead who hasn't responded.\n\nLead: ${name} at ${company}\nProduct: ${product}\nPain points: ${painPoints}\nOriginal outreach summary: ${originalMessage.substring(0, 200)}\nChannel: ${channel}\n\n${promptInstruction}\n\nRules:\n- Max 2 paragraphs\n- Spanish (Latin America)\n- Tone: professional, not pushy\n- Sign as \"Equipo GivraTech\"\n\nReturn JSON: {\"subject\": \"follow-up subject\", \"body\": \"the message\"}`;\n\n  results.push({\n    json: {\n      airtableRecordId: item.json.id,\n      leadName: name,\n      company: company,\n      email: email,\n      channel: channel,\n      followUpStep: step,\n      isBreakup: step >= 3,\n      followUpPrompt: prompt,\n      newStatus: step >= 3 ? 'COLD' : ('FOLLOW_UP_' + step)\n    }\n  });\n}\n\nreturn results;\n"
+      },
+      "id": "n8n-wf5-step",
+      "name": "Determine Follow-up Step",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + ($env.OPENAI_API_KEY || 'sk-TU_OPENAI_KEY') }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'gpt-4o', response_format: { type: 'json_object' }, temperature: 0.7, max_tokens: 400, messages: [{ role: 'system', content: 'You are a follow-up specialist for GivraTech. Generate concise, value-adding follow-up messages. Always respond with valid JSON.' }, { role: 'user', content: $json.followUpPrompt }] }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "id": "n8n-wf5-openai",
+      "name": "Generate Follow-up Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1020,
+        340
+      ],
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const data = item.json;\n  let message = {};\n\n  try {\n    const choices = data.choices || (data.body && data.body.choices);\n    if (choices && choices[0]) {\n      message = JSON.parse(choices[0].message.content);\n    }\n  } catch (e) {\n    message = { subject: 'Seguimiento — GivraTech', body: 'Parse error — manual review needed.' };\n  }\n\n  results.push({\n    json: {\n      airtableRecordId: data.airtableRecordId,\n      leadName: data.leadName,\n      company: data.company,\n      email: data.email,\n      channel: data.channel,\n      followUpStep: data.followUpStep,\n      isBreakup: data.isBreakup,\n      newStatus: data.newStatus,\n      messageSubject: message.subject || '',\n      messageBody: message.body || '',\n      sentAt: new Date().toISOString()\n    }\n  });\n}\n\nreturn results;\n"
+      },
+      "id": "n8n-wf5-parse",
+      "name": "Parse Follow-up",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "breakup-check",
+              "leftValue": "={{ $json.isBreakup }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "n8n-wf5-breakup",
+      "name": "Is Breakup?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_TABLE_ID"
+        },
+        "id": "={{ $json.airtableRecordId }}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "COLD",
+            "Follow Up Count": "={{ $json.followUpStep }}",
+            "Last Contact": "={{ new Date().toISOString().split('T')[0] }}",
+            "Last Follow-up Message": "={{ $json.messageBody }}",
+            "Cold Reason": "No response after 3 follow-ups",
+            "Reactivate After": "={{ new Date(Date.now() + 60*24*60*60*1000).toISOString().split('T')[0] }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "n8n-wf5-cold",
+      "name": "Update → COLD (Breakup)",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1780,
+        240
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CRED_ID",
+          "name": "Airtable GivraTech"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_TABLE_ID"
+        },
+        "id": "={{ $json.airtableRecordId }}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "={{ $json.newStatus }}",
+            "Follow Up Count": "={{ $json.followUpStep }}",
+            "Last Contact": "={{ new Date().toISOString().split('T')[0] }}",
+            "Last Follow-up Message": "={{ $json.messageBody }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "n8n-wf5-update",
+      "name": "Update Follow-up Step",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1780,
+        440
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CRED_ID",
+          "name": "Airtable GivraTech"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Start Manual": {
+      "main": [
+        [
+          {
+            "node": "Get Leads for Follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Diario 9AM": {
+      "main": [
+        [
+          {
+            "node": "Get Leads for Follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Leads for Follow-up": {
+      "main": [
+        [
+          {
+            "node": "Has Leads?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Leads?": {
+      "main": [
+        [
+          {
+            "node": "Determine Follow-up Step",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Determine Follow-up Step": {
+      "main": [
+        [
+          {
+            "node": "Generate Follow-up Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Follow-up Message": {
+      "main": [
+        [
+          {
+            "node": "Parse Follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Follow-up": {
+      "main": [
+        [
+          {
+            "node": "Is Breakup?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Breakup?": {
+      "main": [
+        [
+          {
+            "node": "Update → COLD (Breakup)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Follow-up Step",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  },
+  "tags": [
+    {
+      "name": "GivraTech"
+    },
+    {
+      "name": "Follow-up"
+    }
+  ]
+}

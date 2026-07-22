@@ -6,11 +6,11 @@ import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 
 const navLinks = [
-  { href: '/',          label: 'Home' },
-  { href: '/services', label: 'Services' },
-  { href: '/demos',     label: 'Demos' },
-  { href: '/about',  label: 'About' },
-  { href: '/contact',  label: 'Contact' },
+  { href: '/',          label: 'Inicio' },
+  { href: '/services', label: 'Servicios' },
+  { href: '/demos',     label: 'Demostraciones' },
+  { href: '/about',  label: 'Nosotros' },
+  { href: '/contact',  label: 'Contacto' },
 ]
 
 export default function Navbar() {
@@ -41,7 +41,7 @@ export default function Navbar() {
             Givra<span style={{ color: 'var(--text-primary)' }}>Tech</span>
           </span>
           <span className="hidden sm:inline text-xs font-medium tracking-widest uppercase" style={{ color: 'var(--text-muted)', letterSpacing: '0.14em' }}>
-            Data & AI
+            Datos e IA
           </span>
         </Link>
 
@@ -66,19 +66,19 @@ export default function Navbar() {
             className="text-sm font-medium px-4 py-2 rounded-lg border transition-all hover:border-neon/40"
             style={{ borderColor: 'var(--border-light)', color: 'var(--text-primary)' }}
           >
-            See Demos
+            Ver Demostraciones
           </Link>
           <Link href="/contact"
             className="text-sm font-semibold px-4 py-2 rounded-lg text-white transition-all hover:shadow-neon-sm"
             style={{ background: 'var(--neon-dark)', color: '#fff' }}
           >
-            Book a Call
+            Agendar Llamada
           </Link>
         </div>
 
         {/* Mobile hamburger */}
         <button className="lg:hidden p-2 rounded-lg" style={{ color: 'var(--text-secondary)' }}
-          onClick={() => setOpen(!open)} aria-label="Toggle menu">
+          onClick={() => setOpen(!open)} aria-label="Alternar menú">
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
@@ -102,12 +102,12 @@ export default function Navbar() {
             <Link href="/demos" onClick={() => setOpen(false)}
               className="text-sm font-medium text-center py-2.5 rounded-lg border"
               style={{ borderColor: 'var(--border-light)', color: 'var(--text-primary)' }}>
-              See Demos
+              Ver Demostraciones
             </Link>
             <Link href="/contact" onClick={() => setOpen(false)}
               className="text-sm font-semibold text-center py-2.5 rounded-lg text-white"
               style={{ background: 'var(--neon-dark)' }}>
-              Book a Call
+              Agendar Llamada
             </Link>
           </div>
         </div>

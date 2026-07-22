@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Givra Tech — LinkedIn Profile Photo 400×400</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 400px;
+      height: 400px;
+      overflow: hidden;
+      background: #04050A;
+    }
+    .frame {
+      width: 400px;
+      height: 400px;
+      position: relative;
+      overflow: hidden;
+      background: #08090E;
+      /* LinkedIn shows as circle — use border-radius if you want a preview */
+      /* border-radius: 50%; */
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.10; }
+      50%       { opacity: 0.22; }
+    }
+    @keyframes pulse2 {
+      0%, 100% { opacity: 0.10; }
+      50%       { opacity: 0.22; }
+    }
+    .p1 { animation: pulse  3s ease-in-out infinite; }
+    .p2 { animation: pulse2 3s ease-in-out infinite 0.75s; }
+    .p3 { animation: pulse  3s ease-in-out infinite 1.5s; }
+    .p4 { animation: pulse2 3s ease-in-out infinite 2.25s; }
+  </style>
+</head>
+<body>
+<div class="frame">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+    <defs>
+
+      <!-- Gradient stroke for G arc -->
+      <linearGradient id="ag" x1="10%" y1="0%" x2="90%" y2="100%">
+        <stop offset="0%"  stop-color="#00FFFF"/>
+        <stop offset="45%" stop-color="#00C8FF"/>
+        <stop offset="100%" stop-color="#005FBB"/>
+      </linearGradient>
+
+      <!-- G path — centered in 400×400, sized to ~260px -->
+      <!--
+        G circle center: (180, 200), radius 105
+        Arc top-right  (30°): (180+91, 200-52.5) = (271, 147)
+        Arc bot-right (-30°): (271, 253)
+        Crossbar outer:       (180+105+30, 200) = ~(308, 200)
+        Crossbar inner:       (271+some, 200) ~ (260, 200)
+      -->
+      <path id="gp" d="M271,147 A105,105 0 1,0 271,253 L308,253 L308,200 L260,200"/>
+      <mask id="gm">
+        <use href="#gp" stroke="white" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </mask>
+
+      <!-- Background radial ambient -->
+      <radialGradient id="bg1" cx="45%" cy="50%" r="55%">
+        <stop offset="0%"  stop-color="#00C8FF" stop-opacity="0.09"/>
+        <stop offset="100%" stop-color="#00C8FF" stop-opacity="0"/>
+      </radialGradient>
+
+      <!-- Outer ring gradient (decorative border) -->
+      <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"  stop-color="#00C8FF" stop-opacity="0.25"/>
+        <stop offset="50%" stop-color="#00C8FF" stop-opacity="0.08"/>
+        <stop offset="100%" stop-color="#0066BB" stop-opacity="0.15"/>
+      </linearGradient>
+
+    </defs>
+
+    <!-- ── BACKGROUND ────────────────────────── -->
+    <rect width="400" height="400" fill="#08090E"/>
+    <rect width="400" height="400" fill="url(#bg1)"/>
+
+    <!-- Subtle corner gradients for depth -->
+    <radialGradient id="c1" cx="0%" cy="0%" r="60%">
+      <stop offset="0%" stop-color="#00C8FF" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <rect width="400" height="400" fill="url(#c1)"/>
+
+    <!-- ── OUTER DECORATIVE RING ─────────────── -->
+    <circle cx="200" cy="200" r="188" fill="none" stroke="url(#ringGrad)" stroke-width="0.8"/>
+    <circle cx="200" cy="200" r="178" fill="none" stroke="rgba(0,200,255,0.04)" stroke-width="0.5"/>
+
+    <!-- ── GLOW RINGS BEHIND G-PATH ──────────── -->
+    <use href="#gp" stroke="#00C8FF" stroke-width="60" fill="none" stroke-linecap="round" opacity="0.035"/>
+    <use href="#gp" stroke="#00C8FF" stroke-width="36" fill="none" stroke-linecap="round" opacity="0.055"/>
+    <use href="#gp" stroke="#00C8FF" stroke-width="20" fill="none" stroke-linecap="round" opacity="0.09"/>
+    <use href="#gp" stroke="#00C8FF" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.14"/>
+
+    <!-- ── GRADIENT STROKE (the actual G) ────── -->
+    <rect x="60" y="80" width="280" height="260" fill="url(#ag)" mask="url(#gm)"/>
+
+    <!-- ── SECONDARY NODES (arc midpoints) ────── -->
+    <!-- Top arc midpoint: (180, 200-105) = (180, 95) -->
+    <circle cx="180" cy="95"  r="10" fill="#00C8FF" opacity="0.08"/>
+    <circle cx="180" cy="95"  r="5"  fill="#00C8FF" opacity="0.3"/>
+    <circle cx="180" cy="95"  r="2.5" fill="#00C8FF" opacity="0.6"/>
+    <!-- Bottom arc midpoint: (180, 305) -->
+    <circle cx="180" cy="305" r="10" fill="#00C8FF" opacity="0.08"/>
+    <circle cx="180" cy="305" r="5"  fill="#00C8FF" opacity="0.3"/>
+    <circle cx="180" cy="305" r="2.5" fill="#00C8FF" opacity="0.6"/>
+
+    <!-- ── PRIMARY NODES ───────────────────────── -->
+
+    <!-- Node 1: top-right (arc start) -->
+    <circle cx="271" cy="147" r="36" fill="#00C8FF" class="p1" opacity="0.10"/>
+    <circle cx="271" cy="147" r="22" fill="#00C8FF" opacity="0.10"/>
+    <circle cx="271" cy="147" r="13" fill="#00C8FF" opacity="0.18"/>
+    <circle cx="271" cy="147" r="8"  fill="#00EEFF"/>
+    <circle cx="271" cy="147" r="3.5" fill="#fff"/>
+
+    <!-- Node 2: leftmost -->
+    <circle cx="75"  cy="200" r="32" fill="#00C8FF" class="p2" opacity="0.10"/>
+    <circle cx="75"  cy="200" r="18" fill="#00C8FF" opacity="0.10"/>
+    <circle cx="75"  cy="200" r="11" fill="#00C8FF" opacity="0.18"/>
+    <circle cx="75"  cy="200" r="7"  fill="#00C8FF"/>
+    <circle cx="75"  cy="200" r="3"  fill="#fff" opacity="0.6"/>
+
+    <!-- Node 3: bottom-right (arc end) -->
+    <circle cx="271" cy="253" r="36" fill="#00C8FF" class="p3" opacity="0.10"/>
+    <circle cx="271" cy="253" r="22" fill="#00C8FF" opacity="0.10"/>
+    <circle cx="271" cy="253" r="13" fill="#00C8FF" opacity="0.18"/>
+    <circle cx="271" cy="253" r="8"  fill="#00EEFF"/>
+    <circle cx="271" cy="253" r="3.5" fill="#fff"/>
+
+    <!-- Node 4: crossbar end -->
+    <circle cx="308" cy="200" r="36" fill="#00C8FF" class="p4" opacity="0.10"/>
+    <circle cx="308" cy="200" r="22" fill="#00C8FF" opacity="0.10"/>
+    <circle cx="308" cy="200" r="13" fill="#00C8FF" opacity="0.18"/>
+    <circle cx="308" cy="200" r="8"  fill="#00EEFF"/>
+    <circle cx="308" cy="200" r="3.5" fill="#fff"/>
+
+    <!-- ── WORDMARK (bottom) ────────────────────── -->
+    <!-- Thin separator line -->
+    <line x1="130" y1="342" x2="270" y2="342" stroke="#1E293B" stroke-width="0.8"/>
+
+    <!-- "GIVRA" -->
+    <text x="200" y="363"
+          text-anchor="middle"
+          font-family="'Inter', 'Helvetica Neue', sans-serif"
+          font-size="22"
+          font-weight="800"
+          fill="#FFFFFF"
+          letter-spacing="6">GIVRA</text>
+
+    <!-- "TECH" -->
+    <text x="200" y="381"
+          text-anchor="middle"
+          font-family="'Inter', 'Helvetica Neue', sans-serif"
+          font-size="11"
+          font-weight="300"
+          fill="#00C8FF"
+          letter-spacing="8">TECH</text>
+
+  </svg>
+</div>
+
+<!-- Instructions -->
+<div style="position:fixed;bottom:0;left:0;right:0;background:#000;color:#555;font-family:monospace;font-size:10px;padding:6px 12px;">
+  📸 Profile photo: 400 × 400px — Screenshot only the frame above | LinkedIn crops to circle automatically
+</div>
+</body>
+</html>

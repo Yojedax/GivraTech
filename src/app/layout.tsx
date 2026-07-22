@@ -6,30 +6,30 @@ import Footer from '@/components/layout/Footer'
 const BASE_URL = 'https://givratech.pages.dev'
 
 export const metadata: Metadata = {
-  title: 'GivraTech — From Data to Decision',
-  description: 'Specialized data & AI consulting for companies looking to turn their information into real competitive advantage.',
-  keywords: ['data consulting', 'artificial intelligence', 'machine learning', 'Argentina'],
+  title: 'GivraTech — De Datos a Decisiones',
+  description: 'Consultoría especializada en datos e IA para empresas que buscan convertir su información en ventaja competitiva real.',
+  keywords: ['consultoría de datos', 'inteligencia artificial', 'machine learning', 'Argentina'],
   metadataBase: new URL(BASE_URL),
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: BASE_URL,
     siteName: 'GivraTech',
-    title: 'GivraTech — From Data to Decision',
-    description: 'Specialized data & AI consulting for companies looking to turn their information into real competitive advantage.',
+    title: 'GivraTech — De Datos a Decisiones',
+    description: 'Consultoría especializada en datos e IA para empresas que buscan convertir su información en ventaja competitiva real.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'GivraTech — From Data to Decision',
+        alt: 'GivraTech — De Datos a Decisiones',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GivraTech — From Data to Decision',
-    description: 'Data & AI consulting for real decisions.',
+    title: 'GivraTech — De Datos a Decisiones',
+    description: 'Consultoría de datos e IA para decisiones reales.',
     images: ['/og-image.png'],
   },
 }
@@ -41,7 +41,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />

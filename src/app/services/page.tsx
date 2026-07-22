@@ -3,8 +3,8 @@ import { ArrowRight } from 'lucide-react'
 import { services } from '@/data/content'
 
 export const metadata = {
-  title: 'Services — GivraTech',
-  description: 'Data & AI solutions for logistics, retail and e-commerce.',
+  title: 'Servicios — GivraTech',
+  description: 'Soluciones de datos e IA para logística, retail y e-commerce.',
 }
 
 export default function ServicesPage() {
@@ -19,13 +19,13 @@ export default function ServicesPage() {
         <div className="container-wide relative z-10">
           <div className="max-w-3xl">
             <div className="badge mb-4" style={{ background: 'var(--neon-glow)', color: 'var(--neon)' }}>
-              Services
+              Servicios
             </div>
             <h1 className="font-display text-5xl lg:text-6xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
-              Each service is designed to deliver measurable impact
+              Cada servicio está diseñado para entregar impacto medible
             </h1>
             <p className="text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-              We don't sell technology. We sell results. Each solution is structured around a concrete business problem and a measurable KPI.
+              No vendemos tecnología. Vendemos resultados. Cada solución está estructurada alrededor de un problema empresarial concreto y un KPI medible.
             </p>
           </div>
         </div>
@@ -50,7 +50,7 @@ export default function ServicesPage() {
                       {service.icon}
                     </span>
                     <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
-                      Service {String(i + 1).padStart(2, '0')}
+                      Servicio {String(i + 1).padStart(2, '0')}
                     </span>
                   </div>
                   <h2 className="font-display text-2xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
@@ -67,13 +67,13 @@ export default function ServicesPage() {
                 <div className="lg:col-span-1 space-y-5">
                   <div>
                     <div className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-muted)' }}>
-                      Problem
+                      Problema
                     </div>
                     <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{service.problem}</p>
                   </div>
                   <div>
                     <div className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-muted)' }}>
-                      Solution
+                      Solución
                     </div>
                     <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{service.solution}</p>
                   </div>
@@ -83,7 +83,7 @@ export default function ServicesPage() {
                 <div className="lg:col-span-1 space-y-5">
                   <div>
                     <div className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-muted)' }}>
-                      Deliverables
+                      Entregables
                     </div>
                     <ul className="space-y-1.5">
                       {service.deliverables.map((d) => (
@@ -99,7 +99,7 @@ export default function ServicesPage() {
                     style={{ background: 'var(--neon-glow)', borderLeft: '3px solid var(--neon)' }}
                   >
                     <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--neon)' }}>
-                      Expected Impact
+                      Impacto Esperado
                     </div>
                     <p className="text-sm leading-relaxed" style={{ color: 'var(--neon-light)' }}>
                       {service.impact}
@@ -119,17 +119,17 @@ export default function ServicesPage() {
         }} />
         <div className="container-tight text-center relative z-10">
           <h2 className="font-display text-4xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-            Which one should we start with?
+            ¿Por cuál deberíamos empezar?
           </h2>
           <p className="mb-8 max-w-xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-            A 30-minute call is enough to identify the service with the highest ROI for your company.
+            Una llamada de 30 minutos es suficiente para identificar el servicio con mayor ROI para tu empresa.
           </p>
           <Link
             href="/contact"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-sm transition-all hover:shadow-neon hover:-translate-y-0.5"
             style={{ background: 'var(--neon)', color: 'var(--surface-0)' }}
           >
-            Book Exploratory Call <ArrowRight size={14} />
+            Agendar Llamada Exploratoria <ArrowRight size={14} />
           </Link>
         </div>
       </section>

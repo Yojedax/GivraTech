@@ -42,12 +42,12 @@ export default function FAQAndCTA() {
       <section className="section-pad" style={{ background: 'var(--surface-1)' }}>
         <div className="container-wide">
           <div className="text-center mb-12">
-            <div className="badge badge-neutral mb-4">Tools</div>
+            <div className="badge badge-neutral mb-4">Herramientas</div>
             <h2 className="font-display text-3xl lg:text-4xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>
-              Tech Stack
+              Stack Tecnológico
             </h2>
             <p className="text-sm max-w-lg mx-auto" style={{ color: 'var(--text-secondary)' }}>
-              We select the most suitable tools for each project. No stack dogma.
+              Seleccionamos las herramientas más adecuadas para cada proyecto. Sin dogmatismo de stack.
             </p>
           </div>
 
@@ -88,12 +88,12 @@ export default function FAQAndCTA() {
         <div className="container-wide">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
             <div>
-              <div className="badge badge-neon mb-4">FAQ</div>
+              <div className="badge badge-neon mb-4">Preguntas Frecuentes</div>
               <h2 className="font-display text-4xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-                Frequently Asked Questions
+                Preguntas Frecuentes
               </h2>
               <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                The most common questions before starting a data project.
+                Las preguntas más comunes antes de iniciar un proyecto de datos.
               </p>
             </div>
             <div className="lg:col-span-2">
@@ -122,13 +122,13 @@ export default function FAQAndCTA() {
             className="inline-block text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full border mb-6"
             style={{ borderColor: 'var(--border-neon)', color: 'var(--neon)' }}
           >
-            From Data to Decision
+            De Datos a Decisión
           </div>
           <h2 className="font-display text-4xl lg:text-6xl font-bold mb-6 leading-tight" style={{ color: 'var(--text-primary)' }}>
-            How much money are you leaving on the table?
+            ¿Cuánto dinero estás dejando sobre la mesa?
           </h2>
           <p className="text-lg mb-10 max-w-xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-            A 30-minute call is enough to identify the three highest-impact projects for your company this year.
+            Una llamada de 30 minutos es suficiente para identificar los tres proyectos de mayor impacto para tu empresa este año.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
@@ -136,14 +136,14 @@ export default function FAQAndCTA() {
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold text-sm transition-all hover:shadow-neon hover:-translate-y-0.5"
               style={{ background: 'var(--neon)', color: 'var(--surface-0)' }}
             >
-              Book Exploratory Call <ArrowRight size={14} />
+              Agendar Llamada Exploratoria <ArrowRight size={14} />
             </Link>
             <Link
               href="/demos"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold text-sm border transition-all hover:bg-white/5"
               style={{ borderColor: 'var(--border-light)', color: 'var(--text-primary)' }}
             >
-              See Demos First
+              Ver Demostraciones Primero
             </Link>
           </div>
         </div>

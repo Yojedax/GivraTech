@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="Givra Tech Icon">
+  <title>Givra Tech</title>
+
+  <!-- Background -->
+  <rect width="48" height="48" rx="10" ry="10" fill="#08090E"/>
+
+  <!--
+    G-NODE SYMBOL
+    A geometric G letterform built from data-node junction points.
+    Circle center: (22, 24) — radius: 14
+    Path: arc from top-right (34,17) counterclockwise to bottom-right (34,31),
+    then the inner L-structure (crossbar + inner arm).
+  -->
+
+  <!-- Glow layer 1 (outermost, very soft) -->
+  <path d="M34,17 A14,14 0 1,0 34,31 L40,31 L40,24 L32,24"
+        stroke="#00C8FF" stroke-width="9" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"
+        opacity="0.06"/>
+
+  <!-- Glow layer 2 (mid) -->
+  <path d="M34,17 A14,14 0 1,0 34,31 L40,31 L40,24 L32,24"
+        stroke="#00C8FF" stroke-width="5.5" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"
+        opacity="0.16"/>
+
+  <!-- Main stroke (sharp) -->
+  <path d="M34,17 A14,14 0 1,0 34,31 L40,31 L40,24 L32,24"
+        stroke="#00C8FF" stroke-width="2.2" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- ─── DATA NODES ─────────────────────────────── -->
+
+  <!-- Node 1: top-right (arc start) -->
+  <circle cx="34" cy="17" r="7.5" fill="#00C8FF" opacity="0.08"/>
+  <circle cx="34" cy="17" r="4.5" fill="#00C8FF" opacity="0.18"/>
+  <circle cx="34" cy="17" r="2.6" fill="#00C8FF"/>
+
+  <!-- Node 2: leftmost arc point -->
+  <circle cx="8" cy="24" r="6" fill="#00C8FF" opacity="0.08"/>
+  <circle cx="8" cy="24" r="3.8" fill="#00C8FF" opacity="0.18"/>
+  <circle cx="8" cy="24" r="2.2" fill="#00C8FF"/>
+
+  <!-- Node 3: bottom-right (arc end) -->
+  <circle cx="34" cy="31" r="7.5" fill="#00C8FF" opacity="0.08"/>
+  <circle cx="34" cy="31" r="4.5" fill="#00C8FF" opacity="0.18"/>
+  <circle cx="34" cy="31" r="2.6" fill="#00C8FF"/>
+
+  <!-- Node 4: crossbar outer end -->
+  <circle cx="40" cy="24" r="7.5" fill="#00C8FF" opacity="0.08"/>
+  <circle cx="40" cy="24" r="4.5" fill="#00C8FF" opacity="0.18"/>
+  <circle cx="40" cy="24" r="2.6" fill="#00C8FF"/>
+
+</svg>

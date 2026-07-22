@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Givra Tech — Premium Logo System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:        #04050A;
+      --surface:   #08090E;
+      --surface2:  #0C0E16;
+      --border:    #0F172A;
+      --border2:   #1E293B;
+      --cyan:      #00C8FF;
+      --cyan-dim:  #0088CC;
+      --cyan-glow: rgba(0, 200, 255, 0.12);
+      --white:     #FFFFFF;
+      --gray1:     #E2E8F0;
+      --gray2:     #94A3B8;
+      --gray3:     #475569;
+      --gray4:     #1E293B;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--gray2);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ─────────────────────────────────── */
+    .header {
+      padding: 72px 80px 56px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 4px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .brand-title {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .brand-subtitle {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--gray3);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── SECTIONS ───────────────────────────────── */
+    .section {
+      padding: 72px 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-number {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      color: var(--gray4);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--gray3);
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+
+    /* ── LOGO STAGE ─────────────────────────────── */
+    .stage {
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .stage::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse 60% 60% at 20% 50%, rgba(0,200,255,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .stage-lg { padding: 80px; min-height: 260px; }
+    .stage-md { padding: 56px; min-height: 200px; }
+    .stage-sm { padding: 40px; min-height: 160px; }
+    .stage-dark { background: #020304; }
+
+    /* ── GRID LAYOUTS ───────────────────────────── */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .row     { display: flex; gap: 20px; align-items: stretch; flex-wrap: wrap; }
+
+    .stage-label {
+      position: absolute;
+      bottom: 16px;
+      left: 20px;
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      color: var(--gray4);
+      text-transform: uppercase;
+    }
+
+    /* ── MOCK USAGE ─────────────────────────────── */
+    .mock-nav {
+      background: #050609;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 0 28px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mock-nav-links {
+      display: flex;
+      gap: 32px;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--gray3);
+      letter-spacing: 0.3px;
+    }
+    .mock-nav-cta {
+      background: linear-gradient(135deg, #00C8FF 0%, #0088CC 100%);
+      color: #020304;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 8px 18px;
+      border-radius: 6px;
+    }
+
+    .mock-card {
+      background: var(--surface2);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 28px;
+    }
+    .mock-card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .mock-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+    }
+    .mock-card-subtitle {
+      font-size: 11px;
+      color: var(--gray3);
+      margin-top: 2px;
+    }
+    .mock-stat {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .mock-stat-item {
+      background: var(--border);
+      border-radius: 8px;
+      padding: 14px 12px;
+      border: 1px solid #111827;
+    }
+    .mock-stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: -0.5px;
+    }
+    .mock-stat-label {
+      font-size: 9px;
+      color: var(--gray3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── COLOR PALETTE ──────────────────────────── */
+    .palette { display: flex; gap: 0; border-radius: 12px; overflow: hidden; height: 80px; }
+    .palette-bar { flex: 1; position: relative; }
+    .palette-bar-label {
+      position: absolute;
+      bottom: 12px;
+      left: 14px;
+      font-size: 9px;
+      letter-spacing: 1px;
+      font-weight: 500;
+    }
+    .palette-bar-hex {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      font-size: 9px;
+      letter-spacing: 1px;
+      font-weight: 400;
+      opacity: 0.7;
+    }
+    .swatches {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .swatch-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+    }
+    .swatch-info { font-size: 9px; color: var(--gray3); letter-spacing: 0.5px; }
+
+    /* ── TYPOGRAPHY SECTION ─────────────────────── */
+    .type-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .type-row:last-child { border-bottom: none; }
+    .type-spec { font-size: 9px; letter-spacing: 2px; color: var(--gray4); text-transform: uppercase; margin-bottom: 8px; }
+
+    /* ── NODE ANIMATION ─────────────────────────── */
+    @keyframes pulse {
+      0%, 100% { opacity: 0.18; transform: scale(1); }
+      50%       { opacity: 0.28; transform: scale(1.15); }
+    }
+    .node-pulse { animation: pulse 2.8s ease-in-out infinite; }
+    .node-pulse-2 { animation: pulse 2.8s ease-in-out infinite 0.6s; }
+    .node-pulse-3 { animation: pulse 2.8s ease-in-out infinite 1.2s; }
+    .node-pulse-4 { animation: pulse 2.8s ease-in-out infinite 1.8s; }
+
+    /* ── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 900px) {
+      .header, .section { padding: 48px 32px; }
+      .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ━━ HEADER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="header">
+  <p class="brand-label">Logo System</p>
+  <h1 class="brand-title">Givra Tech</h1>
+  <p class="brand-subtitle">Data · AI · Growth Intelligence &nbsp;—&nbsp; Identity v1.0</p>
+</div>
+
+
+<!-- ━━ 01 · ICON / FAVICON ━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <p class="section-number">01</p>
+  <p class="section-title">Icon &amp; Favicon</p>
+
+  <div class="grid-3">
+
+    <!-- Large icon -->
+    <div class="stage stage-lg" style="grid-column: span 1;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+        <defs>
+          <linearGradient id="arcGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"  stop-color="#00EEFF"/>
+            <stop offset="55%" stop-color="#00C8FF"/>
+            <stop offset="100%" stop-color="#0078CC"/>
+          </linearGradient>
+          <path id="gPath1" d="M85,42.5 A35,35 0 1,0 85,77.5 L100,77.5 L100,60 L80,60"/>
+          <mask id="gMask1">
+            <use href="#gPath1" stroke="white" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </mask>
+          <radialGradient id="bgGrad1" cx="35%" cy="45%" r="60%">
+            <stop offset="0%"   stop-color="#00C8FF" stop-opacity="0.07"/>
+            <stop offset="100%" stop-color="#00C8FF" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- Background -->
+        <rect width="120" height="120" rx="24" fill="#08090E"/>
+        <rect width="120" height="120" rx="24" fill="url(#bgGrad1)"/>
+        <!-- Outer glow path -->
+        <use href="#gPath1" stroke="#00C8FF" stroke-width="18" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.05"/>
+        <use href="#gPath1" stroke="#00C8FF" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.10"/>
+        <!-- Gradient stroke via mask -->
+        <rect x="0" y="0" width="120" height="120" fill="url(#arcGrad1)" mask="url(#gMask1)"/>
+        <!-- Nodes -->
+        <circle cx="85" cy="42.5" r="16" fill="#00C8FF" opacity="0.06" class="node-pulse"/>
+        <circle cx="85" cy="42.5" r="9"  fill="#00C8FF" opacity="0.14"/>
+        <circle cx="85" cy="42.5" r="5.5" fill="#00EEFF"/>
+        <circle cx="85" cy="42.5" r="2.5" fill="#fff"/>
+        <circle cx="20" cy="60" r="14" fill="#00C8FF" opacity="0.06" class="node-pulse-2"/>
+        <circle cx="20" cy="60" r="8"  fill="#00C8FF" opacity="0.14"/>
+        <circle cx="20" cy="60" r="4.8" fill="#00C8FF"/>
+        <circle cx="20" cy="60" r="2.2" fill="#fff" opacity="0.7"/>
+        <circle cx="85" cy="77.5" r="16" fill="#00C8FF" opacity="0.06" class="node-pulse-3"/>
+        <circle cx="85" cy="77.5" r="9"  fill="#00C8FF" opacity="0.14"/>
+        <circle cx="85" cy="77.5" r="5.5" fill="#00EEFF"/>
+        <circle cx="85" cy="77.5" r="2.5" fill="#fff"/>
+        <circle cx="100" cy="60" r="16" fill="#00C8FF" opacity="0.06" class="node-pulse-4"/>
+        <circle cx="100" cy="60" r="9"  fill="#00C8FF" opacity="0.14"/>
+        <circle cx="100" cy="60" r="5.5" fill="#00EEFF"/>
+        <circle cx="100" cy="60" r="2.5" fill="#fff"/>
+      </svg>
+      <span class="stage-label">120 × 120 — Full render</span>
+    </div>
+
+    <!-- Small scale tests -->
+    <div style="display: flex; flex-direction: column; gap: 16px; justify-content: center; padding: 0;">
+      <div class="stage stage-sm" style="flex: 1; position: relative;">
+        <div style="display: flex; gap: 24px; align-items: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="64" height="64">
+            <defs>
+              <path id="gp64" d="M85,42.5 A35,35 0 1,0 85,77.5 L100,77.5 L100,60 L80,60"/>
+              <mask id="gm64"><use href="#gp64" stroke="white" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></mask>
+            </defs>
+            <rect width="120" height="120" rx="24" fill="#08090E"/>
+            <use href="#gp64" stroke="#00C8FF" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.07"/>
+            <use href="#gp64" stroke="#00C8FF" stroke-width="8"  fill="none" stroke-linecap="round" opacity="0.12"/>
+            <rect x="0" y="0" width="120" height="120" fill="url(#arcGrad1)" mask="url(#gm64)"/>
+            <circle cx="85" cy="42.5" r="8" fill="#00C8FF" opacity="0.15"/><circle cx="85" cy="42.5" r="4.5" fill="#00EEFF"/><circle cx="85" cy="42.5" r="2" fill="#fff"/>
+            <circle cx="20" cy="60"   r="7" fill="#00C8FF" opacity="0.15"/><circle cx="20" cy="60"   r="3.8" fill="#00C8FF"/>
+            <circle cx="85" cy="77.5" r="8" fill="#00C8FF" opacity="0.15"/><circle cx="85" cy="77.5" r="4.5" fill="#00EEFF"/><circle cx="85" cy="77.5" r="2" fill="#fff"/>
+            <circle cx="100" cy="60"  r="8" fill="#00C8FF" opacity="0.15"/><circle cx="100" cy="60"  r="4.5" fill="#00EEFF"/><circle cx="100" cy="60"  r="2" fill="#fff"/>
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="48" height="48">
+            <defs>
+              <path id="gp48" d="M85,42.5 A35,35 0 1,0 85,77.5 L100,77.5 L100,60 L80,60"/>
+              <mask id="gm48"><use href="#gp48" stroke="white" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></mask>
+            </defs>
+            <rect width="120" height="120" rx="24" fill="#08090E"/>
+            <use href="#gp48" stroke="#00C8FF" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.07"/>
+            <rect x="0" y="0" width="120" height="120" fill="url(#arcGrad1)" mask="url(#gm48)"/>
+            <circle cx="85" cy="42.5" r="7" fill="#00EEFF"/><circle cx="20" cy="60" r="6" fill="#00C8FF"/>
+            <circle cx="85" cy="77.5" r="7" fill="#00EEFF"/><circle cx="100" cy="60" r="7" fill="#00EEFF"/>
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="32" height="32">
+            <defs>
+              <path id="gp32" d="M85,42.5 A35,35 0 1,0 85,77.5 L100,77.5 L100,60 L80,60"/>
+              <mask id="gm32"><use href="#gp32" stroke="white" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></mask>
+            </defs>
+            <rect width="120" height="120" rx="24" fill="#08090E"/>
+            <rect x="0" y="0" width="120" height="120" fill="#00C8FF" mask="url(#gm32)"/>
+            <circle cx="85" cy="42.5" r="8" fill="#00EEFF"/><circle cx="20" cy="60" r="6" fill="#00C8FF"/>
+            <circle cx="85" cy="77.5" r="8" fill="#00EEFF"/><circle cx="100" cy="60" r="8" fill="#00EEFF"/>
+          </svg>
+        </div>
+        <span class="stage-label">64 · 48 · 32 px scale tests</span>
+      </div>
+    </div>
+
+    <!-- On various backgrounds -->
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div class="stage stage-sm" style="background: #050710; position: relative;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="72" height="72">
+          <defs><path id="gp-nb" d="M85,42.5 A35,35 0 1,0 85,77.5 L100,77.5 L100,60 L80,60"/><mask id="gm-nb"><use href="#gp-nb" stroke="white" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></mask></defs>
+          <use href="#gp-nb" stroke="#00C8FF" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.07"/>
+          <rect x="0" y="0" width="120" height="120" fill="url(#arcGrad1)" mask="url(#gm-nb)"/>
+          <circle cx="85" cy="42.5" r="10" fill="#00C8FF" opacity="0.15"/><circle cx="85" cy="42.5" r="5.5" fill="#00EEFF"/><circle cx="85" cy="42.5" r="2.5" fill="#fff"/>
+          <circle cx="20" cy="60" r="8" fill="#00C8FF" opacity="0.15"/><circle cx="20" cy="60" r="4.2" fill="#00C8FF"/>
+          <circle cx="85" cy="77.5" r="10" fill="#00C8FF" opacity="0.15"/><circle cx="85" cy="77.5" r="5.5" fill="#00EEFF"/><circle cx="85" cy="77.5" r="2.5" fill="#fff"/>
+          <circle cx="100" cy="60" r="10" fill="#00C8FF" opacity="0.15"/><circle cx="100" cy="60" r="5.5" fill="#00EEFF"/><circle cx="100" cy="60" r="2.5" fill="#fff"/>
+        </svg>
+        <span class="stage-label">No background (transparent)</span>
+      </div>
+      <div class="stage stage-sm" style="background: #0A1628; position: relative;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="72" height="72">
+          <defs><path id="gp-nv" d="M85,42.5 A35,35 0 1,0 85,77.5 L100,77.5 L100,60 L80,60"/><mask id="gm-nv"><use href="#gp-nv" stroke="white" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></mask></defs>
+          <use href="#gp-nv" stroke="#00C8FF" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.07"/>
+          <rect x="0" y="0" width="120" height="120" fill="url(#arcGrad1)" mask="url(#gm-nv)"/>
+          <circle cx="85" cy="42.5" r="10" fill="#00C8FF" opacity="0.15"/><circle cx="85" cy="42.5" r="5.5" fill="#00EEFF"/><circle cx="85" cy="42.5" r="2.5" fill="#fff"/>
+          <circle cx="20" cy="60" r="8" fill="#00C8FF" opacity="0.15"/><circle cx="20" cy="60" r="4.2" fill="#00C8FF"/>
+          <circle cx="85" cy="77.5" r="10" fill="#00C8FF" opacity="0.15"/><circle cx="85" cy="77.5" r="5.5" fill="#00EEFF"/><circle cx="85" cy="77.5" r="2.5" fill="#fff"/>
+          <circle cx="100" cy="60" r="10" fill="#00C8FF" opacity="0.15"/><circle cx="100" cy="60" r="5.5" fill="#00EEFF"/><circle cx="100" cy="60" r="2.5" fill="#fff"/>
+        </svg>
+        <span class="stage-label">Deep navy background</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ━━ 02 · HORIZONTAL WORDMARK ━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <p class="section-number">02</p>
+  <p class="section-title">Horizontal Wordmark</p>
+
+  <!-- Primary version -->
+  <div class="stage stage-lg" style="margin-bottom: 20px;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 100" width="500" height="100">
+      <defs>
+        <linearGradient id="arcGradH" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"  stop-color="#00FFFF"/>
+          <stop offset="50%" stop-color="#00C8FF"/>
+          <stop offset="100%" stop-color="#006ECC"/>
+        </linearGradient>
+        <path id="gPathH" d="M71,30 A24,24 0 1,0 71,70 L82,70 L82,50 L68,50"/>
+        <mask id="gMaskH">
+          <use href="#gPathH" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </mask>
+        <radialGradient id="bgH" cx="10%" cy="50%" r="35%">
+          <stop offset="0%" stop-color="#00C8FF" stop-opacity="0.06"/>
+          <stop offset="100%" stop-color="#00C8FF" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="500" height="100" rx="12" fill="#08090E"/>
+      <rect width="500" height="100" rx="12" fill="url(#bgH)"/>
+      <!-- Glow -->
+      <use href="#gPathH" stroke="#00C8FF" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.05"/>
+      <use href="#gPathH" stroke="#00C8FF" stroke-width="7"  fill="none" stroke-linecap="round" opacity="0.10"/>
+      <!-- Gradient stroke -->
+      <rect x="10" y="10" width="90" height="80" fill="url(#arcGradH)" mask="url(#gMaskH)"/>
+      <!-- Nodes -->
+      <circle cx="71" cy="30" r="10" fill="#00C8FF" opacity="0.07"/><circle cx="71" cy="30" r="6"  fill="#00C8FF" opacity="0.15"/><circle cx="71" cy="30" r="3.8" fill="#00EEFF"/><circle cx="71" cy="30" r="1.8" fill="#fff"/>
+      <circle cx="23" cy="50" r="8"  fill="#00C8FF" opacity="0.07"/><circle cx="23" cy="50" r="4.8" fill="#00C8FF" opacity="0.15"/><circle cx="23" cy="50" r="3"   fill="#00C8FF"/>
+      <circle cx="71" cy="70" r="10" fill="#00C8FF" opacity="0.07"/><circle cx="71" cy="70" r="6"  fill="#00C8FF" opacity="0.15"/><circle cx="71" cy="70" r="3.8" fill="#00EEFF"/><circle cx="71" cy="70" r="1.8" fill="#fff"/>
+      <circle cx="82" cy="50" r="10" fill="#00C8FF" opacity="0.07"/><circle cx="82" cy="50" r="6"  fill="#00C8FF" opacity="0.15"/><circle cx="82" cy="50" r="3.8" fill="#00EEFF"/><circle cx="82" cy="50" r="1.8" fill="#fff"/>
+      <!-- Thin divider -->
+      <line x1="104" y1="28" x2="104" y2="72" stroke="#1E293B" stroke-width="1"/>
+      <!-- Wordmark -->
+      <text x="120" y="58" font-family="'Inter', sans-serif" font-size="30" font-weight="800" fill="#FFFFFF" letter-spacing="3">GIVRA</text>
+      <text x="253" y="58" font-family="'Inter', sans-serif" font-size="30" font-weight="200" fill="#00C8FF" letter-spacing="6">TECH</text>
+      <!-- Tagline -->
+      <text x="121" y="74" font-family="'Inter', sans-serif" font-size="8" font-weight="400" fill="#1E3A5F" letter-spacing="2.8">DATA · AI · GROWTH INTELLIGENCE</text>
+    </svg>
+    <span class="stage-label">Primary — Full tagline</span>
+  </div>
+
+  <!-- Compact (no tagline) -->
+  <div class="grid-2" style="margin-bottom: 0;">
+    <div class="stage stage-md" style="position: relative;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 80" width="340" height="72">
+        <defs>
+          <path id="gPathH2" d="M55,24 A19,19 0 1,0 55,56 L65,56 L65,40 L53,40"/>
+          <mask id="gMaskH2"><use href="#gPathH2" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></mask>
+        </defs>
+        <use href="#gPathH2" stroke="#00C8FF" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.06"/>
+        <use href="#gPathH2" stroke="#00C8FF" stroke-width="5.5" fill="none" stroke-linecap="round" opacity="0.12"/>
+        <rect x="8" y="8" width="65" height="65" fill="url(#arcGradH)" mask="url(#gMaskH2)"/>
+        <circle cx="55" cy="24" r="3" fill="#00EEFF"/><circle cx="18" cy="40" r="2.5" fill="#00C8FF"/>
+        <circle cx="55" cy="56" r="3" fill="#00EEFF"/><circle cx="65" cy="40" r="3" fill="#00EEFF"/>
+        <line x1="82" y1="22" x2="82" y2="58" stroke="#1E293B" stroke-width="1"/>
+        <text x="95" y="46" font-family="'Inter', sans-serif" font-size="24" font-weight="800" fill="#FFFFFF" letter-spacing="2">GIVRA</text>
+        <text x="205" y="46" font-family="'Inter', sans-serif" font-size="24" font-weight="200" fill="#00C8FF" letter-spacing="5">TECH</text>
+      </svg>
+      <span class="stage-label">Compact — Nav usage</span>
+    </div>
+    <div class="stage stage-md" style="background: #0A1628; position: relative;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 80" width="340" height="72">
+        <defs>
+          <path id="gPathH3" d="M55,24 A19,19 0 1,0 55,56 L65,56 L65,40 L53,40"/>
+          <mask id="gMaskH3"><use href="#gPathH3" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></mask>
+        </defs>
+        <use href="#gPathH3" stroke="#00C8FF" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.06"/>
+        <rect x="8" y="8" width="65" height="65" fill="url(#arcGradH)" mask="url(#gMaskH3)"/>
+        <circle cx="55" cy="24" r="3" fill="#00EEFF"/><circle cx="18" cy="40" r="2.5" fill="#00C8FF"/>
+        <circle cx="55" cy="56" r="3" fill="#00EEFF"/><circle cx="65" cy="40" r="3" fill="#00EEFF"/>
+        <line x1="82" y1="22" x2="82" y2="58" stroke="#1E3A5F" stroke-width="1"/>
+        <text x="95" y="46" font-family="'Inter', sans-serif" font-size="24" font-weight="800" fill="#FFFFFF" letter-spacing="2">GIVRA</text>
+        <text x="205" y="46" font-family="'Inter', sans-serif" font-size="24" font-weight="200" fill="#00C8FF" letter-spacing="5">TECH</text>
+      </svg>
+      <span class="stage-label">On navy background</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ━━ 03 · SQUARE LOCKUP ━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <p class="section-number">03</p>
+  <p class="section-title">Square Lockup</p>
+
+  <div class="row">
+
+    <!-- Primary square -->
+    <div style="flex: 0 0 auto;">
+      <div class="stage stage-lg" style="width: 280px; height: 280px; position: relative;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="220" height="220">
+          <defs>
+            <linearGradient id="arcGradSq" x1="0%" y1="0%" x2="100%" y2="120%">
+              <stop offset="0%"  stop-color="#00FFFF"/>
+              <stop offset="50%" stop-color="#00C8FF"/>
+              <stop offset="100%" stop-color="#0070CC"/>
+            </linearGradient>
+            <path id="gPathSq" d="M152,60 A52,52 0 1,0 152,124 L172,124 L172,92 L144,92"/>
+            <mask id="gMaskSq">
+              <use href="#gPathSq" stroke="white" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </mask>
+            <radialGradient id="bgSq" cx="42%" cy="38%" r="50%">
+              <stop offset="0%" stop-color="#00C8FF" stop-opacity="0.07"/>
+              <stop offset="100%" stop-color="#00C8FF" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect width="240" height="240" rx="28" fill="#08090E"/>
+          <rect width="240" height="240" rx="28" fill="url(#bgSq)"/>
+          <!-- Glow rings -->
+          <use href="#gPathSq" stroke="#00C8FF" stroke-width="30" fill="none" stroke-linecap="round" opacity="0.04"/>
+          <use href="#gPathSq" stroke="#00C8FF" stroke-width="16" fill="none" stroke-linecap="round" opacity="0.08"/>
+          <use href="#gPathSq" stroke="#00C8FF" stroke-width="8"  fill="none" stroke-linecap="round" opacity="0.14"/>
+          <!-- Gradient stroke -->
+          <rect x="25" y="15" width="165" height="130" fill="url(#arcGradSq)" mask="url(#gMaskSq)"/>
+          <!-- Secondary nodes (arc midpoints) -->
+          <circle cx="100" cy="26" r="6" fill="#00C8FF" opacity="0.12"/><circle cx="100" cy="26" r="3" fill="#00C8FF" opacity="0.5"/>
+          <circle cx="100" cy="146" r="6" fill="#00C8FF" opacity="0.12"/><circle cx="100" cy="146" r="3" fill="#00C8FF" opacity="0.5"/>
+          <!-- Primary nodes -->
+          <circle cx="152" cy="60" r="20" fill="#00C8FF" opacity="0.05" class="node-pulse"/>
+          <circle cx="152" cy="60" r="12" fill="#00C8FF" opacity="0.12"/>
+          <circle cx="152" cy="60" r="7"  fill="#00EEFF"/>
+          <circle cx="152" cy="60" r="3.2" fill="#fff"/>
+          <circle cx="36"  cy="92" r="18" fill="#00C8FF" opacity="0.05" class="node-pulse-2"/>
+          <circle cx="36"  cy="92" r="10" fill="#00C8FF" opacity="0.12"/>
+          <circle cx="36"  cy="92" r="6"  fill="#00C8FF"/>
+          <circle cx="36"  cy="92" r="2.5" fill="#fff" opacity="0.6"/>
+          <circle cx="152" cy="124" r="20" fill="#00C8FF" opacity="0.05" class="node-pulse-3"/>
+          <circle cx="152" cy="124" r="12" fill="#00C8FF" opacity="0.12"/>
+          <circle cx="152" cy="124" r="7"  fill="#00EEFF"/>
+          <circle cx="152" cy="124" r="3.2" fill="#fff"/>
+          <circle cx="172" cy="92"  r="20" fill="#00C8FF" opacity="0.05" class="node-pulse-4"/>
+          <circle cx="172" cy="92"  r="12" fill="#00C8FF" opacity="0.12"/>
+          <circle cx="172" cy="92"  r="7"  fill="#00EEFF"/>
+          <circle cx="172" cy="92"  r="3.2" fill="#fff"/>
+          <!-- Separator -->
+          <line x1="56" y1="170" x2="184" y2="170" stroke="#1E293B" stroke-width="0.8"/>
+          <!-- "GIVRA" -->
+          <text x="120" y="196" text-anchor="middle" font-family="'Inter', sans-serif" font-size="28" font-weight="800" fill="#FFFFFF" letter-spacing="7">GIVRA</text>
+          <!-- "TECH" -->
+          <text x="120" y="218" text-anchor="middle" font-family="'Inter', sans-serif" font-size="13" font-weight="300" fill="#00C8FF" letter-spacing="9">TECH</text>
+        </svg>
+        <span class="stage-label">LinkedIn · OG Image</span>
+      </div>
+    </div>
+
+    <!-- Small versions -->
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 16px;">
+      <div class="stage stage-md" style="flex: 1; position: relative;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="120" height="120">
+          <defs>
+            <path id="gPathSq2" d="M152,60 A52,52 0 1,0 152,124 L172,124 L172,92 L144,92"/>
+            <mask id="gMaskSq2"><use href="#gPathSq2" stroke="white" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></mask>
+          </defs>
+          <rect width="240" height="240" rx="28" fill="#08090E"/>
+          <use href="#gPathSq2" stroke="#00C8FF" stroke-width="20" fill="none" stroke-linecap="round" opacity="0.05"/>
+          <rect x="25" y="15" width="165" height="130" fill="url(#arcGradSq)" mask="url(#gMaskSq2)"/>
+          <circle cx="152" cy="60"  r="11" fill="#00EEFF"/><circle cx="152" cy="60"  r="5" fill="#fff"/>
+          <circle cx="36"  cy="92"  r="9"  fill="#00C8FF"/><circle cx="36"  cy="92"  r="4" fill="#fff" opacity="0.5"/>
+          <circle cx="152" cy="124" r="11" fill="#00EEFF"/><circle cx="152" cy="124" r="5" fill="#fff"/>
+          <circle cx="172" cy="92"  r="11" fill="#00EEFF"/><circle cx="172" cy="92"  r="5" fill="#fff"/>
+          <line x1="56" y1="170" x2="184" y2="170" stroke="#1E293B" stroke-width="0.8"/>
+          <text x="120" y="196" text-anchor="middle" font-family="'Inter', sans-serif" font-size="28" font-weight="800" fill="#FFFFFF" letter-spacing="7">GIVRA</text>
+          <text x="120" y="218" text-anchor="middle" font-family="'Inter', sans-serif" font-size="13" font-weight="300" fill="#00C8FF" letter-spacing="9">TECH</text>
+        </svg>
+        <span class="stage-label">Profile thumbnail — 120px</span>
+      </div>
+      <div class="stage stage-md" style="flex: 1; background: #0A1628; position: relative;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100" height="100">
+          <defs>
+            <path id="gPathSq3" d="M152,60 A52,52 0 1,0 152,124 L172,124 L172,92 L144,92"/>
+            <mask id="gMaskSq3"><use href="#gPathSq3" stroke="white" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></mask>
+          </defs>
+          <rect x="25" y="15" width="165" height="130" fill="url(#arcGradSq)" mask="url(#gMaskSq3)"/>
+          <circle cx="152" cy="60"  r="10" fill="#00EEFF"/><circle cx="36"  cy="92"  r="8" fill="#00C8FF"/>
+          <circle cx="152" cy="124" r="10" fill="#00EEFF"/><circle cx="172" cy="92"  r="10" fill="#00EEFF"/>
+          <text x="120" y="196" text-anchor="middle" font-family="'Inter', sans-serif" font-size="28" font-weight="800" fill="#FFFFFF" letter-spacing="7">GIVRA</text>
+          <text x="120" y="218" text-anchor="middle" font-family="'Inter', sans-serif" font-size="13" font-weight="300" fill="#00C8FF" letter-spacing="9">TECH</text>
+        </svg>
+        <span class="stage-label">On navy — no bg</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ━━ 04 · MOCK USAGE ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <p class="section-number">04</p>
+  <p class="section-title">Usage in Context</p>
+
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+
+    <!-- Website nav mock -->
+    <div>
+      <p style="font-size: 9px; letter-spacing: 2px; color: var(--gray4); text-transform: uppercase; margin-bottom: 10px;">Website Navigation</p>
+      <div class="mock-nav">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" width="200" height="40">
+          <defs>
+            <path id="gNav" d="M42,14 A14,14 0 1,0 42,46 L50,46 L50,30 L40,30"/>
+            <mask id="gmNav"><use href="#gNav" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></mask>
+          </defs>
+          <use href="#gNav" stroke="#00C8FF" stroke-width="9" fill="none" stroke-linecap="round" opacity="0.07"/>
+          <rect x="10" y="5" width="52" height="52" fill="url(#arcGradH)" mask="url(#gmNav)"/>
+          <circle cx="42" cy="14" r="5" fill="#00EEFF"/><circle cx="14" cy="30" r="4" fill="#00C8FF"/>
+          <circle cx="42" cy="46" r="5" fill="#00EEFF"/><circle cx="50" cy="30" r="5" fill="#00EEFF"/>
+          <line x1="68" y1="16" x2="68" y2="44" stroke="#1E293B" stroke-width="1"/>
+          <text x="76" y="36" font-family="'Inter', sans-serif" font-size="17" font-weight="800" fill="#FFFFFF" letter-spacing="1.5">GIVRA</text>
+          <text x="155" y="36" font-family="'Inter', sans-serif" font-size="17" font-weight="200" fill="#00C8FF" letter-spacing="4">TECH</text>
+        </svg>
+        <div class="mock-nav-links">
+          <span>Services</span>
+          <span>Demos</span>
+          <span>About</span>
+          <span>Contact</span>
+        </div>
+        <span class="mock-nav-cta">Book a Call</span>
+      </div>
+    </div>
+
+    <!-- Dashboard mock -->
+    <div>
+      <p style="font-size: 9px; letter-spacing: 2px; color: var(--gray4); text-transform: uppercase; margin-bottom: 10px;">Client Dashboard Header</p>
+      <div class="mock-card">
+        <div class="mock-card-header">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="40" height="40">
+            <defs>
+              <path id="gDash" d="M85,42.5 A35,35 0 1,0 85,77.5 L100,77.5 L100,60 L80,60"/>
+              <mask id="gmDash"><use href="#gDash" stroke="white" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></mask>
+            </defs>
+            <rect width="120" height="120" rx="20" fill="#050609"/>
+            <rect x="0" y="0" width="120" height="120" fill="url(#arcGrad1)" mask="url(#gmDash)"/>
+            <circle cx="85" cy="42.5" r="8" fill="#00EEFF"/><circle cx="20" cy="60" r="6" fill="#00C8FF"/>
+            <circle cx="85" cy="77.5" r="8" fill="#00EEFF"/><circle cx="100" cy="60" r="8" fill="#00EEFF"/>
+          </svg>
+          <div>
+            <div class="mock-card-title">AI Growth Audit Report</div>
+            <div class="mock-card-subtitle">Customer Segmentation · Churn Analysis · Revenue Intelligence</div>
+          </div>
+        </div>
+        <div class="mock-stat">
+          <div class="mock-stat-item">
+            <div class="mock-stat-value">87</div>
+            <div class="mock-stat-label">Champions</div>
+          </div>
+          <div class="mock-stat-item">
+            <div class="mock-stat-value" style="color: #F59E0B;">23</div>
+            <div class="mock-stat-label">At Risk</div>
+          </div>
+          <div class="mock-stat-item">
+            <div class="mock-stat-value" style="color: #10B981;">+$48K</div>
+            <div class="mock-stat-label">Opportunity</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ━━ 05 · COLOR SYSTEM ━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <p class="section-number">05</p>
+  <p class="section-title">Color System</p>
+
+  <div class="palette">
+    <div class="palette-bar" style="background:#08090E; flex:3;">
+      <span class="palette-bar-hex" style="color:#334155;">#08090E</span>
+      <span class="palette-bar-label" style="color:#334155;">Near Black</span>
+    </div>
+    <div class="palette-bar" style="background:linear-gradient(135deg, #00FFFF 0%, #00C8FF 45%, #0070CC 100%); flex:2;">
+      <span class="palette-bar-hex" style="color:rgba(0,0,0,0.5);">#00C8FF</span>
+      <span class="palette-bar-label" style="color:rgba(0,0,0,0.6);">Neon Cyan</span>
+    </div>
+    <div class="palette-bar" style="background:#FFFFFF; flex:1.5;">
+      <span class="palette-bar-hex" style="color:#94A3B8;">#FFFFFF</span>
+      <span class="palette-bar-label" style="color:#94A3B8;">Pure White</span>
+    </div>
+    <div class="palette-bar" style="background:#0A1628; flex:1.5;">
+      <span class="palette-bar-hex" style="color:#1E3A5F;">#0A1628</span>
+      <span class="palette-bar-label" style="color:#1E3A5F;">Deep Navy</span>
+    </div>
+    <div class="palette-bar" style="background:#1E293B; flex:1;">
+      <span class="palette-bar-hex" style="color:#334155;">#1E293B</span>
+      <span class="palette-bar-label" style="color:#475569;">Slate</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ━━ 06 · TYPOGRAPHY ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <p class="section-number">06</p>
+  <p class="section-title">Typography</p>
+
+  <div class="type-row">
+    <p class="type-spec">Primary Wordmark · Inter 800 · Tracking +6</p>
+    <p style="font-size: 48px; font-weight: 800; color: #fff; letter-spacing: 6px;">GIVRA</p>
+  </div>
+  <div class="type-row">
+    <p class="type-spec">Secondary Wordmark · Inter 200 · Tracking +8</p>
+    <p style="font-size: 48px; font-weight: 200; color: #00C8FF; letter-spacing: 8px;">TECH</p>
+  </div>
+  <div class="type-row">
+    <p class="type-spec">Combined · Standard usage</p>
+    <p style="font-size: 36px; font-weight: 800; color: #fff; letter-spacing: 4px; display: inline;">GIVRA</p>
+    <span style="font-size: 36px; font-weight: 200; color: #00C8FF; letter-spacing: 6px; margin-left: 12px;">TECH</span>
+  </div>
+  <div class="type-row">
+    <p class="type-spec">Tagline · Inter 400 · Tracking +3</p>
+    <p style="font-size: 11px; font-weight: 400; color: #334155; letter-spacing: 3px; text-transform: uppercase;">Data · AI · Growth Intelligence</p>
+  </div>
+
+</div>
+
+
+<!-- ━━ FOOTER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div style="padding: 40px 80px; display: flex; align-items: center; justify-content: space-between;">
+  <p style="font-size: 9px; letter-spacing: 2px; color: var(--gray4); text-transform: uppercase;">Givra Tech · Identity System · v1.0</p>
+  <p style="font-size: 9px; letter-spacing: 2px; color: var(--gray4); text-transform: uppercase;">givratech.com.ar</p>
+</div>
+
+</body>
+</html>

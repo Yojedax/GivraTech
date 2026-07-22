@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 296 72" width="296" height="72" role="img" aria-label="Givra Tech Logo">
+  <title>Givra Tech</title>
+
+  <defs>
+    <!-- Subtle ambient glow for background (purely decorative) -->
+    <radialGradient id="bgGlow" cx="18%" cy="50%" r="30%">
+      <stop offset="0%" stop-color="#00C8FF" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#00C8FF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="296" height="72" rx="10" ry="10" fill="#08090E"/>
+  <!-- Ambient glow from symbol area -->
+  <rect width="296" height="72" rx="10" ry="10" fill="url(#bgGlow)"/>
+
+  <!--
+    G-NODE SYMBOL
+    Placed at top-left. Symbol occupies a 54×54 area starting at (9,9).
+    Scale factor: 54/48 = 1.125 applied to the 48×48 source coordinates.
+    All coordinates below are pre-scaled and shifted.
+
+    Source arc: center (22,24) r=14
+    Scaled:     center (22×1.125+9, 24×1.125+9) = (33.75, 36) ≈ (34, 36)
+    radius:     14×1.125 = 15.75 ≈ 15.8
+
+    Scaled key points:
+    - Arc top-right:  (34×1.125+9, 17×1.125+9) = (47.25, 28.1) ≈ (47, 28)
+    - Arc left:       (8×1.125+9,  24×1.125+9)  = (18,    36)
+    - Arc bot-right:  (34×1.125+9, 31×1.125+9) = (47.25, 43.9) ≈ (47, 44)
+    - Crossbar outer: (40×1.125+9, 24×1.125+9) = (54,    36)
+    - Crossbar inner: (32×1.125+9, 24×1.125+9) = (45,    36)
+  -->
+
+  <!-- Glow layer 1 -->
+  <path d="M47,28 A15.8,15.8 0 1,0 47,44 L54,44 L54,36 L45,36"
+        stroke="#00C8FF" stroke-width="10" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"
+        opacity="0.06"/>
+
+  <!-- Glow layer 2 -->
+  <path d="M47,28 A15.8,15.8 0 1,0 47,44 L54,44 L54,36 L45,36"
+        stroke="#00C8FF" stroke-width="6" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"
+        opacity="0.16"/>
+
+  <!-- Main stroke -->
+  <path d="M47,28 A15.8,15.8 0 1,0 47,44 L54,44 L54,36 L45,36"
+        stroke="#00C8FF" stroke-width="2.4" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- ─── DATA NODES ─────────────────────────────── -->
+
+  <!-- Node: top-right -->
+  <circle cx="47" cy="28" r="8" fill="#00C8FF" opacity="0.08"/>
+  <circle cx="47" cy="28" r="5" fill="#00C8FF" opacity="0.18"/>
+  <circle cx="47" cy="28" r="3" fill="#00C8FF"/>
+
+  <!-- Node: leftmost -->
+  <circle cx="18" cy="36" r="7" fill="#00C8FF" opacity="0.08"/>
+  <circle cx="18" cy="36" r="4.5" fill="#00C8FF" opacity="0.18"/>
+  <circle cx="18" cy="36" r="2.5" fill="#00C8FF"/>
+
+  <!-- Node: bottom-right -->
+  <circle cx="47" cy="44" r="8" fill="#00C8FF" opacity="0.08"/>
+  <circle cx="47" cy="44" r="5" fill="#00C8FF" opacity="0.18"/>
+  <circle cx="47" cy="44" r="3" fill="#00C8FF"/>
+
+  <!-- Node: crossbar outer -->
+  <circle cx="54" cy="36" r="8" fill="#00C8FF" opacity="0.08"/>
+  <circle cx="54" cy="36" r="5" fill="#00C8FF" opacity="0.18"/>
+  <circle cx="54" cy="36" r="3" fill="#00C8FF"/>
+
+  <!-- ─── WORDMARK ──────────────────────────────── -->
+  <!--
+    Typography: Inter (geometric sans-serif)
+    "GIVRA" — weight 700, white, letter-spacing 3
+    "TECH"  — weight 300, #00C8FF cyan, letter-spacing 5
+    Vertical divider line between the two
+  -->
+
+  <!-- Thin vertical divider -->
+  <line x1="76" y1="24" x2="76" y2="48" stroke="#1E293B" stroke-width="1"/>
+
+  <!-- "GIVRA" -->
+  <text
+    x="88" y="41"
+    font-family="'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="22"
+    font-weight="700"
+    fill="#FFFFFF"
+    letter-spacing="3"
+    dominant-baseline="auto">GIVRA</text>
+
+  <!-- "TECH" -->
+  <text
+    x="175" y="41"
+    font-family="'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="22"
+    font-weight="300"
+    fill="#00C8FF"
+    letter-spacing="5"
+    dominant-baseline="auto">TECH</text>
+
+  <!-- Tiny tagline (optional — remove if too busy) -->
+  <text
+    x="89" y="53"
+    font-family="'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="7.5"
+    font-weight="400"
+    fill="#334155"
+    letter-spacing="2.5">DATA · AI · GROWTH INTELLIGENCE</text>
+
+</svg>

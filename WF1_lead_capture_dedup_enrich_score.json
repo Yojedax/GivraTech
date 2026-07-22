@@ -1,0 +1,709 @@
+{
+  "name": "GivraTech WF1 — Lead Capture + Dedup + Enrich + Score",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "n8n-wf1-manual",
+      "name": "Start Manual",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8,
+              "triggerAtDay": {
+                "value": "1,4"
+              }
+            }
+          ]
+        }
+      },
+      "id": "n8n-wf1-schedule",
+      "name": "Schedule Lun-Jue 8AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        500
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.phantombuster.com/api/v2/agents/fetch-output",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "={{$env.PHANTOMBUSTER_AGENT_ID || 'PHANTOMBUSTER_AGENT_ID_AQUI'}}"
+            },
+            {
+              "name": "mode",
+              "value": "most-recent"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Phantombuster-Key",
+              "value": "={{$env.PHANTOMBUSTER_API_KEY || 'TU_PHANTOMBUSTER_KEY'}}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "id": "n8n-wf1-pb",
+      "name": "GET PhantomBuster Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        400
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Split & Normalize PhantomBuster output\nconst raw = $input.first().json;\nlet leads = [];\n\n// PhantomBuster returns output as JSON string or object\ntry {\n  if (typeof raw.output === 'string') {\n    leads = JSON.parse(raw.output);\n  } else if (Array.isArray(raw.output)) {\n    leads = raw.output;\n  } else if (raw.resultObject) {\n    leads = typeof raw.resultObject === 'string'\n      ? JSON.parse(raw.resultObject)\n      : raw.resultObject;\n  } else if (Array.isArray(raw)) {\n    leads = raw;\n  }\n} catch (e) {\n  // If parse fails, try the whole input\n  if (Array.isArray($input.all().map(i => i.json))) {\n    leads = $input.all().map(i => i.json);\n  }\n}\n\nif (!Array.isArray(leads)) leads = [leads];\n\n// Normalize each lead\nconst normalized = leads.map(lead => ({\n  fullName: (lead.fullName || lead.name || lead.firstName && lead.lastName\n    ? (lead.firstName + ' ' + lead.lastName).trim() : '').trim(),\n  firstName: (lead.firstName || (lead.fullName || '').split(' ')[0] || '').trim(),\n  lastName: (lead.lastName || (lead.fullName || '').split(' ').slice(1).join(' ') || '').trim(),\n  company: (lead.companyName || lead.company || lead.organizationName || '').trim(),\n  role: (lead.title || lead.jobTitle || lead.headline || lead.role || '').trim(),\n  linkedinProfileUrl: (lead.linkedinProfileUrl || lead.profileUrl || lead.linkedInUrl || lead.url || '').trim(),\n  profileUrl: (lead.profileUrl || lead.linkedinProfileUrl || '').trim(),\n  website: (lead.companyUrl || lead.website || lead.companyWebsite || '').trim(),\n  location: (lead.location || lead.city || lead.country || '').trim(),\n  country: (lead.country || lead.location || '').trim(),\n  connectionDegree: lead.connectionDegree || lead.degree || '',\n  mutualConnections: lead.sharedConnections || lead.mutualConnectionsCount || 0,\n  followers: lead.followersCount || lead.followers || 0,\n  headline: (lead.headline || lead.title || '').trim(),\n  description: (lead.description || lead.summary || '').trim(),\n  imageUrl: lead.imgUrl || lead.profileImageUrl || '',\n  employeesEstimate: lead.companyEmployees || lead.employeesOnLinkedIn || '',\n  industry: (lead.industry || lead.companyIndustry || '').trim(),\n  _rawSource: 'phantombuster',\n  _scrapedAt: new Date().toISOString()\n})).filter(l => l.fullName || l.linkedinProfileUrl);\n\nif (normalized.length === 0) {\n  return [{ json: { error: 'No leads found in PhantomBuster output', rawKeys: Object.keys(raw) } }];\n}\n\nreturn normalized.map(l => ({ json: l }));\n"
+      },
+      "id": "n8n-wf1-split",
+      "name": "Split & Normalize Leads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        400
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "valid-lead-check",
+              "leftValue": "={{ $json.fullName || $json.linkedinProfileUrl }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "n8n-wf1-valid",
+      "name": "Valid Lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        740,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dupkey",
+              "name": "duplicateKey",
+              "value": "={{ $json.linkedinProfileUrl || $json.profileUrl || (($json.fullName || '').trim() + '-' + ($json.company || '').trim()) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "n8n-wf1-dupkey",
+      "name": "Generate Duplicate Key",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        980,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_TABLE_ID"
+        },
+        "filterByFormula": "={{ '{Duplicate Key} = \"' + ($json.duplicateKey || '').replace(/\"/g, '\\\\\"') + '\"' }}",
+        "returnAll": false,
+        "limit": 1,
+        "options": {}
+      },
+      "id": "n8n-wf1-search",
+      "name": "Search Airtable by DupKey",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1220,
+        340
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": false,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CRED_ID",
+          "name": "Airtable GivraTech"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "exists-check",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "n8n-wf1-exists",
+      "name": "Exists in Airtable?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_TABLE_ID"
+        },
+        "id": "={{ $json.id }}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Last Seen": "={{ new Date().toISOString().split('T')[0] }}",
+            "Updated At": "={{ new Date().toISOString() }}",
+            "Scrape Count": "={{ ($json.fields && $json.fields['Scrape Count'] ? Number($json.fields['Scrape Count']) : 0) + 1 }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "n8n-wf1-update",
+      "name": "Update Existing Lead",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1720,
+        200
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CRED_ID",
+          "name": "Airtable GivraTech"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_TABLE_ID"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.fullName }}",
+            "First Name": "={{ $json.firstName }}",
+            "Last Name": "={{ $json.lastName }}",
+            "Company": "={{ $json.company }}",
+            "Role": "={{ $json.role }}",
+            "LinkedIn URL": "={{ $json.linkedinProfileUrl || $json.profileUrl }}",
+            "Website": "={{ $json.website }}",
+            "Location": "={{ $json.location }}",
+            "Country": "={{ $json.country }}",
+            "Industry": "={{ $json.industry }}",
+            "Headline": "={{ $json.headline }}",
+            "Employees Estimate": "={{ $json.employeesEstimate }}",
+            "Duplicate Key": "={{ $json.duplicateKey }}",
+            "Status": "RAW",
+            "Source": "PhantomBuster",
+            "Created At": "={{ new Date().toISOString() }}",
+            "Last Seen": "={{ new Date().toISOString().split('T')[0] }}",
+            "Scrape Count": "1"
+          }
+        },
+        "options": {}
+      },
+      "id": "n8n-wf1-create",
+      "name": "Create New Lead",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1720,
+        480
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CRED_ID",
+          "name": "Airtable GivraTech"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "airtable-record-id",
+              "name": "airtableRecordId",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "enrichment-prompt",
+              "name": "enrichmentPrompt",
+              "value": "={{ 'Analyze this B2B lead and return a JSON object with enrichment data.\\n\\nLead Data:\\n- Name: ' + ($json.fields ? $json.fields['Name'] : $json.fullName || '') + '\\n- Company: ' + ($json.fields ? $json.fields['Company'] : $json.company || '') + '\\n- Role: ' + ($json.fields ? $json.fields['Role'] : $json.role || '') + '\\n- Industry: ' + ($json.fields ? $json.fields['Industry'] : $json.industry || '') + '\\n- LinkedIn: ' + ($json.fields ? $json.fields['LinkedIn URL'] : $json.linkedinProfileUrl || '') + '\\n- Website: ' + ($json.fields ? $json.fields['Website'] : $json.website || '') + '\\n- Headline: ' + ($json.fields ? $json.fields['Headline'] : $json.headline || '') + '\\n- Employees: ' + ($json.fields ? $json.fields['Employees Estimate'] : $json.employeesEstimate || 'unknown') + '\\n- Location: ' + ($json.fields ? $json.fields['Location'] : $json.location || '') + '\\n\\nReturn ONLY valid JSON with these fields:\\n{\\n  \"industry_category\": \"ecommerce|distribution|agency|saas|services|manufacturing|other\",\\n  \"estimated_revenue\": \"<1M|1M-5M|5M-20M|20M+|unknown\",\\n  \"estimated_employees\": number or null,\\n  \"tech_stack_signals\": [\"shopify\",\"tiendanube\",etc] or [],\\n  \"pain_points\": [\"string1\",\"string2\",\"string3\"] (max 5, specific to their industry),\\n  \"linkedin_activity\": \"high|medium|low|unknown\",\\n  \"icp_match\": \"ECOMMERCE|DISTRIBUTION|AGENCY|OTHER\",\\n  \"budget_signal\": \"high|medium|low|unknown\",\\n  \"summary\": \"2-sentence professional summary of the lead\"\\n}' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "n8n-wf1-prep-openai",
+      "name": "Prepare Enrichment Prompt",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1980,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{  'Bearer ' + ($env.OPENAI_API_KEY || 'sk-TU_OPENAI_KEY') }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'gpt-4o', response_format: { type: 'json_object' }, temperature: 0.3, max_tokens: 800, messages: [{ role: 'system', content: 'You are a B2B lead enrichment analyst for GivraTech, an AI/data consulting company in Latin America. Always respond with valid JSON only.' }, { role: 'user', content: $json.enrichmentPrompt }] }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 45000
+        }
+      },
+      "id": "n8n-wf1-openai",
+      "name": "Enrich Lead (OpenAI GPT-4o)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2240,
+        480
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Parse OpenAI response and calculate score\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const data = item.json;\n  let enrichment = {};\n\n  // Parse OpenAI response\n  try {\n    const choices = data.choices || (data.body && data.body.choices);\n    if (choices && choices[0] && choices[0].message) {\n      enrichment = JSON.parse(choices[0].message.content);\n    }\n  } catch (e) {\n    enrichment = {\n      industry_category: 'unknown',\n      estimated_revenue: 'unknown',\n      pain_points: [],\n      tech_stack_signals: [],\n      icp_match: 'OTHER',\n      budget_signal: 'unknown',\n      summary: 'Enrichment failed — manual review needed'\n    };\n  }\n\n  // ══════════ SCORING MATRIX ══════════\n  let score = 0;\n  let scoreBreakdown = {};\n\n  // 1. Industry Fit (0-25 pts)\n  const ind = (enrichment.industry_category || '').toLowerCase();\n  const indScores = { ecommerce: 25, distribution: 20, agency: 18, saas: 15, manufacturing: 12, services: 10 };\n  scoreBreakdown.industry = indScores[ind] || 5;\n  score += scoreBreakdown.industry;\n\n  // 2. Company Size (0-20 pts)\n  const emp = enrichment.estimated_employees || 0;\n  if (emp >= 50 && emp <= 500) scoreBreakdown.size = 20;\n  else if (emp >= 10 && emp < 50) scoreBreakdown.size = 12;\n  else if (emp > 500) scoreBreakdown.size = 8;\n  else if (emp >= 5 && emp < 10) scoreBreakdown.size = 6;\n  else scoreBreakdown.size = 3;\n  score += scoreBreakdown.size;\n\n  // 3. Pain Signals (0-30 pts)\n  const painCount = (enrichment.pain_points || []).length;\n  scoreBreakdown.pain = Math.min(painCount * 8, 30);\n  score += scoreBreakdown.pain;\n\n  // 4. Budget Signal (0-15 pts)\n  const revMap = { '>20M': 15, '20M+': 15, '5M-20M': 15, '1M-5M': 12, '<1M': 6, 'unknown': 4 };\n  const rev = enrichment.estimated_revenue || 'unknown';\n  scoreBreakdown.budget = revMap[rev] || 4;\n  score += scoreBreakdown.budget;\n\n  // 5. Accessibility (0-10 pts)\n  let access = 0;\n  if (data.linkedinProfileUrl || (data.fields && data.fields['LinkedIn URL'])) access += 5;\n  const activity = (enrichment.linkedin_activity || '').toLowerCase();\n  if (activity === 'high') access += 5;\n  else if (activity === 'medium') access += 3;\n  scoreBreakdown.accessibility = access;\n  score += access;\n\n  // Cap at 100\n  score = Math.min(score, 100);\n\n  // ══════════ TIER ASSIGNMENT ══════════\n  let tier = 'C';\n  if (score >= 80) tier = 'A';\n  else if (score >= 70) tier = 'B';\n\n  // ══════════ PRODUCT MATCHING ══════════\n  const techStack = (enrichment.tech_stack_signals || []).map(s => s.toLowerCase());\n  const painStr = (enrichment.pain_points || []).join(' ').toLowerCase();\n  const icpMatch = (enrichment.icp_match || '').toUpperCase();\n\n  let productPrimary = 'AI Growth Audit';\n  let productSecondary = 'LeadScoring Pro';\n\n  // Tech stack overrides\n  if (techStack.some(t => ['shopify','tiendanube','vtex','magento','woocommerce'].includes(t))) {\n    productPrimary = 'StoreSpy';\n    productSecondary = 'PricingOptimizer';\n  }\n  // Industry-based matching\n  else if (icpMatch === 'ECOMMERCE' || ind === 'ecommerce') {\n    productPrimary = 'StoreSpy';\n    productSecondary = 'AdIntel';\n  }\n  else if (icpMatch === 'DISTRIBUTION' || ind === 'distribution') {\n    productPrimary = 'GeoGrowth';\n    productSecondary = 'PricingOptimizer';\n  }\n  else if (icpMatch === 'AGENCY' || ind === 'agency') {\n    productPrimary = 'Ghostwriter-Brand';\n    productSecondary = 'PodScribe';\n  }\n\n  // Pain-based overrides\n  if (painStr.includes('review') || painStr.includes('reseña') || painStr.includes('reputation')) {\n    productPrimary = 'ReviewMining';\n  }\n  if (painStr.includes('ads') || painStr.includes('publicidad') || painStr.includes('advertising')) {\n    productPrimary = 'AdIntel';\n  }\n  if (painStr.includes('churn') || painStr.includes('retención') || painStr.includes('retention')) {\n    productPrimary = 'AI Growth Audit';\n  }\n  if (painStr.includes('seo') || painStr.includes('posicionamiento') || painStr.includes('search')) {\n    productPrimary = 'SEO-Gap';\n  }\n\n  results.push({\n    json: {\n      airtableRecordId: data.airtableRecordId || data.id,\n      score: score,\n      tier: tier,\n      scoreBreakdown: scoreBreakdown,\n      productPrimary: productPrimary,\n      productSecondary: productSecondary,\n      icpMatch: enrichment.icp_match || 'OTHER',\n      painPoints: (enrichment.pain_points || []).join('; '),\n      techStack: (enrichment.tech_stack_signals || []).join(', '),\n      estimatedRevenue: enrichment.estimated_revenue || 'unknown',\n      summary: enrichment.summary || '',\n      industryCategory: enrichment.industry_category || 'unknown',\n      budgetSignal: enrichment.budget_signal || 'unknown',\n      status: score >= 70 ? 'QUEUE_OUTREACH' : 'COLD',\n      enrichedAt: new Date().toISOString()\n    }\n  });\n}\n\nreturn results;\n"
+      },
+      "id": "n8n-wf1-score",
+      "name": "Parse + Score Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2500,
+        480
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "score-check",
+              "leftValue": "={{ $json.score }}",
+              "rightValue": 70,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "n8n-wf1-score-if",
+      "name": "Score >= 70?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2740,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_TABLE_ID"
+        },
+        "id": "={{ $json.airtableRecordId }}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "QUEUE_OUTREACH",
+            "Score": "={{ $json.score }}",
+            "Tier": "={{ $json.tier }}",
+            "Product Primary": "={{ $json.productPrimary }}",
+            "Product Secondary": "={{ $json.productSecondary }}",
+            "ICP Match": "={{ $json.icpMatch }}",
+            "Pain Points": "={{ $json.painPoints }}",
+            "Tech Stack": "={{ $json.techStack }}",
+            "Revenue Estimate": "={{ $json.estimatedRevenue }}",
+            "Summary": "={{ $json.summary }}",
+            "Enriched At": "={{ $json.enrichedAt }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "n8n-wf1-queue",
+      "name": "Update → QUEUE_OUTREACH",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        3000,
+        380
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CRED_ID",
+          "name": "Airtable GivraTech"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_TABLE_ID"
+        },
+        "id": "={{ $json.airtableRecordId }}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "COLD",
+            "Score": "={{ $json.score }}",
+            "Tier": "={{ $json.tier }}",
+            "Product Primary": "={{ $json.productPrimary }}",
+            "Product Secondary": "={{ $json.productSecondary }}",
+            "ICP Match": "={{ $json.icpMatch }}",
+            "Pain Points": "={{ $json.painPoints }}",
+            "Tech Stack": "={{ $json.techStack }}",
+            "Revenue Estimate": "={{ $json.estimatedRevenue }}",
+            "Summary": "={{ $json.summary }}",
+            "Enriched At": "={{ $json.enrichedAt }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "n8n-wf1-cold",
+      "name": "Update → COLD",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        3000,
+        580
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CRED_ID",
+          "name": "Airtable GivraTech"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Start Manual": {
+      "main": [
+        [
+          {
+            "node": "GET PhantomBuster Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Lun-Jue 8AM": {
+      "main": [
+        [
+          {
+            "node": "GET PhantomBuster Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET PhantomBuster Results": {
+      "main": [
+        [
+          {
+            "node": "Split & Normalize Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split & Normalize Leads": {
+      "main": [
+        [
+          {
+            "node": "Valid Lead?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid Lead?": {
+      "main": [
+        [
+          {
+            "node": "Generate Duplicate Key",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Generate Duplicate Key": {
+      "main": [
+        [
+          {
+            "node": "Search Airtable by DupKey",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Airtable by DupKey": {
+      "main": [
+        [
+          {
+            "node": "Exists in Airtable?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exists in Airtable?": {
+      "main": [
+        [
+          {
+            "node": "Update Existing Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create New Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Existing Lead": {
+      "main": [
+        []
+      ]
+    },
+    "Create New Lead": {
+      "main": [
+        [
+          {
+            "node": "Prepare Enrichment Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Enrichment Prompt": {
+      "main": [
+        [
+          {
+            "node": "Enrich Lead (OpenAI GPT-4o)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enrich Lead (OpenAI GPT-4o)": {
+      "main": [
+        [
+          {
+            "node": "Parse + Score Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse + Score Lead": {
+      "main": [
+        [
+          {
+            "node": "Score >= 70?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score >= 70?": {
+      "main": [
+        [
+          {
+            "node": "Update → QUEUE_OUTREACH",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update → COLD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "GivraTech"
+    },
+    {
+      "name": "Lead Pipeline"
+    }
+  ]
+}

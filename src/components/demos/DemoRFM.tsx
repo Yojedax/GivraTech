@@ -8,21 +8,21 @@ import {
 import { rfmClients, segmentStats, evolucion } from '@/data/rfm-mock'
 
 const segmentColors: Record<string, string> = {
-  Champions: '#166534', Loyal: '#1d4ed8', 'At Risk': '#d97706',
-  Potential: '#7c3aed', New: '#0891b2', Lost: '#dc2626',
+  Campeones: '#166534', Leales: '#1d4ed8', 'En Riesgo': '#d97706',
+  Potencial: '#7c3aed', Nuevo: '#0891b2', Perdidos: '#dc2626',
 }
 const churnByCanal = [
   { canal: 'eCommerce', churn: 0.28 }, { canal: 'App', churn: 0.18 },
-  { canal: 'Store', churn: 0.45 }, { canal: 'Phone', churn: 0.57 },
+  { canal: 'Sucursal', churn: 0.45 }, { canal: 'Teléfono', churn: 0.57 },
 ]
 
 export default function DemoRFM() {
-  const [activeSeg, setActiveSeg] = useState('All')
-  const [activeCanal, setActiveCanal] = useState('All')
+  const [activeSeg, setActiveSeg] = useState('Todos')
+  const [activeCanal, setActiveCanal] = useState('Todos')
 
   const filtered = rfmClients.filter(c =>
-    (activeSeg === 'All' || c.segmento === activeSeg) &&
-    (activeCanal === 'All' || c.canal === activeCanal)
+    (activeSeg === 'Todos' || c.segmento === activeSeg) &&
+    (activeCanal === 'Todos' || c.canal === activeCanal)
   )
   const topRisk = [...rfmClients].sort((a,b) => b.churnProb - a.churnProb).slice(0,5)
   const fmt = (n: number) => n >= 1000000 ? `$${(n/1000000).toFixed(1)}M` : n >= 1000 ? `$${(n/1000).toFixed(0)}K` : `$${n}`
@@ -32,7 +32,7 @@ export default function DemoRFM() {
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
         {segmentStats.map(seg => (
           <button key={seg.segmento}
-            onClick={() => setActiveSeg(activeSeg === seg.segmento ? 'All' : seg.segmento)}
+            onClick={() => setActiveSeg(activeSeg === seg.segmento ? 'Todos' : seg.segmento)}
             className={`card p-4 text-left cursor-pointer transition-all ${activeSeg === seg.segmento ? 'ring-2 ring-neon' : ''}`}
             style={activeSeg === seg.segmento ? { borderColor: 'var(--neon)' } : {}}>
             <div className="w-2 h-2 rounded-full mb-2" style={{ background: segmentColors[seg.segmento] ?? '#888' }} />
@@ -49,8 +49,8 @@ export default function DemoRFM() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="card p-5">
-          <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Segment Evolution</div>
-          <div className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>Last 6 months</div>
+          <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Evolución de Segmento</div>
+          <div className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>Últimos 6 meses</div>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={evolucion} margin={{ top:0, right:10, left:-20, bottom:0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
@@ -58,16 +58,16 @@ export default function DemoRFM() {
               <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
               <Tooltip />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Line type="monotone" dataKey="Champions" stroke="#166534" dot={false} strokeWidth={2} />
-              <Line type="monotone" dataKey="Loyal" stroke="#1d4ed8" dot={false} strokeWidth={2} />
-              <Line type="monotone" dataKey="At Risk" stroke="#d97706" dot={false} strokeWidth={2} />
-              <Line type="monotone" dataKey="Lost" stroke="#dc2626" dot={false} strokeWidth={2} />
+              <Line type="monotone" dataKey="Campeones" stroke="#166534" dot={false} strokeWidth={2} />
+              <Line type="monotone" dataKey="Leales" stroke="#1d4ed8" dot={false} strokeWidth={2} />
+              <Line type="monotone" dataKey="En Riesgo" stroke="#d97706" dot={false} strokeWidth={2} />
+              <Line type="monotone" dataKey="Perdidos" stroke="#dc2626" dot={false} strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
         </div>
         <div className="card p-5">
-          <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Churn by Channel</div>
-          <div className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>Average abandonment rate</div>
+          <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Churn por Canal</div>
+          <div className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>Tasa promedio de abandono</div>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={churnByCanal} margin={{ top:0, right:10, left:-20, bottom:0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
@@ -83,11 +83,11 @@ export default function DemoRFM() {
       <div className="card p-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
-            <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Customer Details</div>
-            <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{filtered.length} customers</div>
+            <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Detalles de Clientes</div>
+            <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{filtered.length} clientes</div>
           </div>
           <div className="flex gap-1.5 flex-wrap">
-            {['All','eCommerce','App','Store','Phone'].map(ch => (
+            {['Todos','eCommerce','App','Sucursal','Teléfono'].map(ch => (
               <button key={ch} onClick={() => setActiveCanal(ch)}
                 className={`demo-tab text-xs py-1.5 px-3 ${activeCanal===ch?'active':''}`}>{ch}</button>
             ))}
@@ -97,7 +97,7 @@ export default function DemoRFM() {
           <table className="w-full text-xs">
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border-light)' }}>
-                {['Customer','Segment','Channel','Recency','Monetary','Churn %','Suggested Action'].map(h => (
+                {['Cliente','Segmento','Canal','Recencia','Monetario','Churn %','Acción Sugerida'].map(h => (
                   <th key={h} className="text-left pb-3 text-[10px] font-semibold uppercase tracking-widest pr-3" style={{ color: 'var(--text-secondary)' }}>{h}</th>
                 ))}
               </tr>
@@ -137,8 +137,8 @@ export default function DemoRFM() {
       </div>
 
       <div className="card p-5">
-        <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Top 5 — Highest Risk</div>
-        <div className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>Require immediate action</div>
+        <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Top 5 — Riesgo Más Alto</div>
+        <div className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>Requieren acción inmediata</div>
         <div className="space-y-2.5">
           {topRisk.map((c, i) => (
             <div key={c.id} className="flex items-center gap-3 p-3 rounded-lg" style={{ background: 'var(--surface-1)' }}>
@@ -148,7 +148,7 @@ export default function DemoRFM() {
                 <div className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{c.segmento} · {c.canal}</div>
               </div>
               <div className="text-right">
-                <div className="text-xs font-bold" style={{ color: '#dc2626' }}>{(c.churnProb*100).toFixed(0)}% risk</div>
+                <div className="text-xs font-bold" style={{ color: '#dc2626' }}>{(c.churnProb*100).toFixed(0)}% riesgo</div>
                 <div className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{fmt(c.monetary)}</div>
               </div>
             </div>

@@ -24,8 +24,8 @@ export interface RFMClient {
   accionSugerida: string;
   impactoPotencial: number;
 }
-export type RFMSegment = "Champions" | "Loyal" | "At Risk" | "Lost" | "New" | "Potential";
-export type Canal = "eCommerce" | "Store" | "Branch" | "App" | "Phone";
+export type RFMSegment = "Campeones" | "Leales" | "En Riesgo" | "Perdidos" | "Nuevo" | "Potencial";
+export type Canal = "eCommerce" | "Sucursal" | "App" | "Teléfono";
 
 export interface SegmentStat {
   segmento: RFMSegment;
@@ -37,12 +37,12 @@ export interface SegmentStat {
 
 export interface EvolucionMes {
   mes: string;
-  Champions: number;
-  Loyal: number;
-  "At Risk": number;
-  Lost: number;
-  New: number;
-  Potential: number;
+  Campeones: number;
+  Leales: number;
+  "En Riesgo": number;
+  Perdidos: number;
+  Nuevo: number;
+  Potencial: number;
 }
 
 // ── Geo Demo ──────────────────────────────────────────────────────────
@@ -52,7 +52,7 @@ export interface GeoResult {
   lat: number;
   lng: number;
   score: number;
-  confianza: "High" | "Medium" | "Low";
+  confianza: "Alta" | "Media" | "Baja";
   fuente: string;
   problema?: string;
   sugerencia?: string;
@@ -96,11 +96,11 @@ export interface RetentionClient {
   nombre: string;
   empresa: string;
   segmento: string;
-  riesgo: "High" | "Medium" | "Low";
+  riesgo: "Alto" | "Medio" | "Bajo";
   score: number;
   motivoPrincipal: string;
   accion: string;
   responsable: string;
   impactoMensual: number;
-  estado: "Pending" | "In progress" | "Recovered" | "Lost";
+  estado: "Pendiente" | "En progreso" | "Recuperado" | "Perdido";
 }

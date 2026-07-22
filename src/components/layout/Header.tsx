@@ -6,10 +6,10 @@ import { Menu, X } from "lucide-react";
 import clsx from "clsx";
 
 const nav = [
-  { label: "Services",  href: "/services" },
-  { label: "Demos",      href: "/demos" },
-  { label: "About",   href: "/about" },
-  { label: "Contact",   href: "/contact" },
+  { label: "Servicios",  href: "/services" },
+  { label: "Demostraciones",      href: "/demos" },
+  { label: "Nosotros",   href: "/about" },
+  { label: "Contacto",   href: "/contact" },
 ];
 
 export function Header() {
@@ -50,15 +50,15 @@ export function Header() {
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
           <Link href="/demos" className="text-sm font-medium text-bordeaux-700 hover:text-bordeaux-800 transition-colors">
-            See Demos
+            Ver Demostraciones
           </Link>
           <Link href="/contact" className="btn-primary text-sm">
-            Book a Call
+            Agendar Llamada
           </Link>
         </div>
 
         {/* Mobile toggle */}
-        <button onClick={() => setOpen(!open)} className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100">
+        <button onClick={() => setOpen(!open)} className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100" aria-label="Alternar menú">
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
@@ -77,7 +77,7 @@ export function Header() {
           ))}
           <div className="pt-3 border-t border-gray-100">
             <Link href="/contact" onClick={() => setOpen(false)} className="btn-primary w-full justify-center">
-              Book a Call
+              Agendar Llamada
             </Link>
           </div>
         </div>

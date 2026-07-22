@@ -4,13 +4,13 @@ import { useState } from 'react'
 import { Mail, Linkedin, ArrowRight, CheckCircle, Loader2 } from 'lucide-react'
 
 const challenges = [
-  'Churn / Customer Retention',
-  'Segmentation & Marketing',
-  'Logistics Optimization',
-  'Data / Address Quality',
-  'Dashboard & KPI Monitoring',
-  'AI Automation',
-  'Other Challenge',
+  'Churn / Retención de Clientes',
+  'Segmentación y Marketing',
+  'Optimización Logística',
+  'Calidad de Datos / Direcciones',
+  'Dashboard y Monitoreo de KPIs',
+  'Automatización con IA',
+  'Otro Desafío',
 ]
 
 export default function ContactPage() {
@@ -51,13 +51,13 @@ export default function ContactPage() {
         <div className="container-wide relative z-10">
           <div className="max-w-2xl">
             <div className="badge mb-4" style={{ background: 'var(--neon-glow)', color: 'var(--neon)' }}>
-              Contact
+              Contacto
             </div>
             <h1 className="font-display text-5xl lg:text-6xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-              We start with a conversation
+              Comenzamos con una conversación
             </h1>
             <p className="text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-              No cost, no commitment. 30 minutes to understand your challenge and evaluate together if we can drive impact.
+              Sin costo, sin compromiso. 30 minutos para entender tu desafío y evaluar juntos si podemos generar impacto.
             </p>
           </div>
         </div>
@@ -71,44 +71,44 @@ export default function ContactPage() {
               <div className="card p-10 text-center">
                 <CheckCircle size={40} className="mx-auto mb-4" style={{ color: 'var(--neon)' }} />
                 <h2 className="font-display text-3xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>
-                  We received your message!
+                  ¡Recibimos tu mensaje!
                 </h2>
                 <p className="text-sm mb-6 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  The GivraTech team will reach out within the next 24 hours to schedule your exploratory call.
+                  El equipo de GivraTech se comunicará en las próximas 24 horas para agendar tu llamada exploratoria.
                 </p>
                 <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                  In the meantime, you can explore our <a href="/demos" style={{ color: 'var(--neon)' }} className="underline">interactive demos</a>.
+                  Mientras tanto, puedes explorar nuestros <a href="/demos" style={{ color: 'var(--neon)' }} className="underline">demos interactivos</a>.
                 </div>
               </div>
             ) : (
               <div className="card p-8">
                 <h2 className="font-display text-2xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
-                  Tell us about your challenge
+                  Cuéntanos sobre tu desafío
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                      Name *
+                      Nombre *
                     </label>
                     <input
                       name="nombre"
                       value={form.nombre}
                       onChange={handleChange}
-                      placeholder="Your name"
+                      placeholder="Tu nombre"
                       className="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-colors focus:border-cyan-500"
                       style={inputStyle}
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                      Company *
+                      Empresa *
                     </label>
                     <input
                       name="empresa"
                       value={form.empresa}
                       onChange={handleChange}
-                      placeholder="Company name"
+                      placeholder="Nombre de la empresa"
                       className="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-colors focus:border-cyan-500"
                       style={inputStyle}
                     />
@@ -129,13 +129,13 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                      Title
+                      Cargo
                     </label>
                     <input
                       name="cargo"
                       value={form.cargo}
                       onChange={handleChange}
-                      placeholder="Director, Manager, CTO..."
+                      placeholder="Director, Gerente, CTO..."
                       className="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-colors focus:border-cyan-500"
                       style={inputStyle}
                     />
@@ -144,7 +144,7 @@ export default function ContactPage() {
 
                 <div className="mb-4">
                   <label className="block text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                    Main Challenge
+                    Desafío Principal
                   </label>
                   <select
                     name="desafio"
@@ -153,7 +153,7 @@ export default function ContactPage() {
                     className="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-colors focus:border-cyan-500"
                     style={inputStyle}
                   >
-                    <option value="">Select the area of highest impact</option>
+                    <option value="">Selecciona el área de mayor impacto</option>
                     {challenges.map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
@@ -162,13 +162,13 @@ export default function ContactPage() {
 
                 <div className="mb-6">
                   <label className="block text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                    Tell us more (optional)
+                    Cuéntanos más (opcional)
                   </label>
                   <textarea
                     name="mensaje"
                     value={form.mensaje}
                     onChange={handleChange}
-                    placeholder="Context description, what data you have, what decisions you need to make..."
+                    placeholder="Descripción del contexto, qué datos tienes, qué decisiones necesitas tomar..."
                     rows={4}
                     className="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-colors focus:border-cyan-500"
                     style={{ ...inputStyle, resize: 'vertical' }}
@@ -182,14 +182,14 @@ export default function ContactPage() {
                   style={{ background: 'var(--neon)', color: 'var(--surface-0)' }}
                 >
                   {loading ? (
-                    <><Loader2 size={15} className="animate-spin" /> Sending...</>
+                    <><Loader2 size={15} className="animate-spin" /> Enviando...</>
                   ) : (
-                    <>Book Exploratory Call <ArrowRight size={15} /></>
+                    <>Agendar Llamada Exploratoria <ArrowRight size={15} /></>
                   )}
                 </button>
 
                 <p className="text-xs text-center mt-3" style={{ color: 'var(--text-muted)' }}>
-                  No spam. We only contact you to schedule the call.
+                  Sin spam. Solo nos comunicamos para agendar la llamada.
                 </p>
               </div>
             )}
@@ -199,13 +199,13 @@ export default function ContactPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* What to expect */}
             <div className="card p-6">
-              <h3 className="font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>What happens next</h3>
+              <h3 className="font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Qué pasa ahora</h3>
               <div className="space-y-4">
                 {[
-                  { step: '01', text: 'Get confirmation within 24 business hours' },
-                  { step: '02', text: '30 minutes of free exploratory call' },
-                  { step: '03', text: 'Quick assessment of potential impact for your company' },
-                  { step: '04', text: 'Concrete proposal if there\'s real fit' },
+                  { step: '01', text: 'Confirmación dentro de 24 horas hábiles' },
+                  { step: '02', text: '30 minutos de llamada exploratoria gratuita' },
+                  { step: '03', text: 'Evaluación rápida del impacto potencial para tu empresa' },
+                  { step: '04', text: 'Propuesta concreta si hay una afinidad real' },
                 ].map((s) => (
                   <div key={s.step} className="flex gap-3 items-start">
                     <span
@@ -225,7 +225,7 @@ export default function ContactPage() {
               className="p-6 rounded-2xl border"
               style={{ background: 'var(--surface-2)', borderColor: 'var(--border-light)' }}
             >
-              <h3 className="font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Direct Contact</h3>
+              <h3 className="font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Contacto Directo</h3>
               <div className="space-y-3">
                 <a
                   href="mailto:hola@giatech.ai"
