@@ -1,23 +1,23 @@
 const steps = [
   {
     number: '01',
-    title: 'Data & Business Diagnosis',
-    description: 'We analyze the current state of your data, systems, and processes. We identify quick wins with the highest impact potential in the first 30 days.',
+    title: 'Diagnóstico de Datos y Negocio',
+    description: 'Analizamos el estado actual de tus datos, sistemas y procesos. Identificamos victorias rápidas con mayor potencial de impacto en los primeros 30 días.',
   },
   {
     number: '02',
-    title: 'Solution Design',
-    description: 'We define the architecture, stack, and deliverables. No over-engineering: the right solution for the real problem, not the most technologically impressive.',
+    title: 'Diseño de Solución',
+    description: 'Definimos la arquitectura, stack y entregables. Sin sobre-ingeniería: la solución correcta para el problema real, no la más impresionante tecnológicamente.',
   },
   {
     number: '03',
-    title: 'Iterative Development',
-    description: 'We deliver in short sprints. Each iteration produces something measurable and usable by the team. We validate with real business users, not just technicians.',
+    title: 'Desarrollo Iterativo',
+    description: 'Entregamos en sprints cortos. Cada iteración produce algo medible y usable por el equipo. Validamos con usuarios reales del negocio, no solo técnicos.',
   },
   {
     number: '04',
-    title: 'Knowledge Transfer & Scaling',
-    description: 'We document, train, and leave the solution operating autonomously. Your internal team can maintain and extend what was built without depending on us.',
+    title: 'Transferencia de Conocimiento y Escalabilidad',
+    description: 'Documentamos, capacitamos y dejamos la solución operando autónomamente. Tu equipo interno puede mantener y extender lo construido sin depender de nosotros.',
   },
 ]
 
@@ -28,19 +28,19 @@ export default function HowWeWork() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
           {/* Left — sticky only on desktop; on mobile renders normally in flow */}
           <div className="lg:sticky lg:top-28">
-            <div className="badge badge-neon mb-4">Methodology</div>
+            <div className="badge badge-neon mb-4">Metodología</div>
             <h2 className="font-display text-4xl lg:text-5xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
-              Quick to implement.<br />
-              <span className="gradient-text">Easy to operate.</span>
+              Rápido de implementar.<br />
+              <span className="gradient-text">Fácil de operar.</span>
             </h2>
             <p className="leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
-              Our projects generate measurable results from the first weeks. We don't build solutions that end up in a drawer: we build tools your team uses every day.
+              Nuestros proyectos generan resultados medibles desde las primeras semanas. No construimos soluciones que terminen en un cajón: construimos herramientas que tu equipo usa todos los días.
             </p>
             <div className="p-5 rounded-xl border-l-4" style={{ borderColor: 'var(--neon)', background: 'var(--neon-glow)' }}>
               <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--text-primary)' }}>
-                &ldquo;80% of impact comes from 20% of your data. We identify that 20% before writing a single line of code.&rdquo;
+                &ldquo;El 80% del impacto viene del 20% de tus datos. Identificamos ese 20% antes de escribir una sola línea de código.&rdquo;
               </p>
-              <p className="text-xs mt-2" style={{ color: 'var(--text-muted)' }}>— GivraTech Working Principle</p>
+              <p className="text-xs mt-2" style={{ color: 'var(--text-muted)' }}>— Principio de Trabajo de GivraTech</p>
             </div>
           </div>
 

@@ -1,0 +1,472 @@
+{
+  "name": "Givra Tech - WF1: PhantomBuster → Dedup → Enrich → Score",
+  "nodes": [
+    {
+      "id": "node-001",
+      "name": "▶ Start Manual",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 400],
+      "parameters": {}
+    },
+    {
+      "id": "node-001b",
+      "name": "⏰ Schedule (Mon+Thu 8AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [200, 560],
+      "disabled": true,
+      "parameters": {
+        "rule": {
+          "interval": [
+            { "field": "cronExpression", "expression": "0 8 * * 1,4" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node-002",
+      "name": "GET PhantomBuster Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [420, 400],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.phantombuster.com/api/v2/agents/fetch-output",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "id", "value": "PHANTOMBUSTER_AGENT_ID_AQUI" }
+          ]
+        },
+        "options": {
+          "response": { "response": { "neverError": true } }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PB_CRED_ID",
+          "name": "PhantomBuster API Key"
+        }
+      },
+      "notes": "CONFIGURAR: reemplazar PHANTOMBUSTER_AGENT_ID_AQUI con el Agent ID. Header: X-Phantombuster-Key: TU_API_KEY"
+    },
+    {
+      "id": "node-003",
+      "name": "Split & Normalize Leads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 400],
+      "parameters": {
+        "jsCode": "// ═══════════════════════════════════════════════════\n// SPLIT & NORMALIZE - PhantomBuster → items individuales\n// ═══════════════════════════════════════════════════\nconst input = $input.all();\nconst results = [];\n\nfor (const item of input) {\n  let raw = item.json;\n\n  // PhantomBuster puede devolver output como string JSON o array directo\n  if (raw.output && typeof raw.output === 'string') {\n    try { raw = JSON.parse(raw.output); } catch(e) { raw = []; }\n  } else if (raw.output && Array.isArray(raw.output)) {\n    raw = raw.output;\n  } else if (raw.resultObject && typeof raw.resultObject === 'string') {\n    try { raw = JSON.parse(raw.resultObject); } catch(e) { raw = []; }\n  } else if (Array.isArray(raw)) {\n    // ya es array\n  } else {\n    raw = [raw];\n  }\n\n  if (!Array.isArray(raw)) raw = [raw];\n\n  for (const lead of raw) {\n    if (!lead || typeof lead !== 'object') continue;\n    results.push({\n      json: {\n        fullName:          lead.fullName         || lead.name            || (lead.firstName + ' ' + lead.lastName).trim() || '',\n        firstName:         lead.firstName        || '',\n        lastName:          lead.lastName         || '',\n        linkedinProfileUrl: lead.linkedinProfileUrl || lead.profileUrl || lead.url || '',\n        profileUrl:        lead.profileUrl       || lead.linkedinProfileUrl || '',\n        headline:          lead.headline         || lead.jobTitle        || lead.occupation || '',\n        company:           lead.company          || lead.companyName     || lead.currentCompany || '',\n        location:          lead.location         || lead.city            || '',\n        connectionDegree:  lead.connectionDegree || '',\n        email:             lead.email            || '',\n        industry:          lead.industry         || '',\n        _pbRaw:            JSON.stringify(lead)\n      }\n    });\n  }\n}\n\nconsole.log(`[Normalize] Input items: ${input.length} → Output leads: ${results.length}`);\nreturn results;"
+      }
+    },
+    {
+      "id": "node-004",
+      "name": "✅ Valid Lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [860, 400],
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": false, "typeValidation": "loose" },
+          "conditions": [
+            {
+              "id": "cond-has-identifier",
+              "leftValue": "={{ ($json.linkedinProfileUrl || $json.profileUrl || $json.fullName || '').trim() }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEmpty" }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "node-005",
+      "name": "Generate Duplicate Key",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [1080, 300],
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "fields": {
+          "values": [
+            {
+              "name": "duplicateKey",
+              "type": "stringValue",
+              "string": "={{ $json.linkedinProfileUrl || $json.profileUrl || (($json.fullName || '').trim() + '-' + ($json.company || '').trim()) }}"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "notes": "FIX: includeOtherFields = ON. Sin esto se pierden los datos del lead."
+    },
+    {
+      "id": "node-006",
+      "name": "🔍 Search Airtable by DupKey",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [1300, 300],
+      "alwaysOutputData": true,
+      "executeOnce": false,
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "YOUR_AIRTABLE_TABLE_ID",
+          "mode": "id"
+        },
+        "filterByFormula": "={{ `{Duplicate Key} = \"${$json.duplicateKey}\"` }}",
+        "options": {
+          "returnAll": false,
+          "maxRecords": 1
+        }
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CRED_ID",
+          "name": "Airtable Token"
+        }
+      },
+      "notes": "CRÍTICO: Execute Once = OFF (procesa cada item). Always Output Data = ON (pasa input cuando no hay match). Return All = OFF + maxRecords = 1."
+    },
+    {
+      "id": "node-007",
+      "name": "🔀 Exists in Airtable?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1520, 300],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-has-airtable-id",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEmpty" }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "notes": "TRUE = existe en Airtable ($json.id = recXXX). FALSE = nuevo lead (input pasado through por alwaysOutputData)."
+    },
+    {
+      "id": "node-008",
+      "name": "♻️ Update Existing Lead",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [1740, 160],
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "YOUR_AIRTABLE_TABLE_ID",
+          "mode": "id"
+        },
+        "id": "={{ $json.id }}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Last Seen": "={{ $now.toISO() }}",
+            "Updated At": "={{ $now.toISO() }}",
+            "Source": "PhantomBuster"
+          }
+        },
+        "options": {}
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CRED_ID",
+          "name": "Airtable Token"
+        }
+      },
+      "notes": "Solo actualiza Last Seen + Updated At. Los leads existentes ya tienen sus datos. Ajustar campos según tu schema."
+    },
+    {
+      "id": "node-009",
+      "name": "✨ Create New Lead",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [1740, 440],
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "YOUR_AIRTABLE_TABLE_ID",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Full Name":    "={{ $json.fullName }}",
+            "First Name":   "={{ $json.firstName }}",
+            "Last Name":    "={{ $json.lastName }}",
+            "LinkedIn URL": "={{ $json.linkedinProfileUrl || $json.profileUrl }}",
+            "Headline":     "={{ $json.headline }}",
+            "Company":      "={{ $json.company }}",
+            "Location":     "={{ $json.location }}",
+            "Email":        "={{ $json.email || '' }}",
+            "Duplicate Key": "={{ $json.duplicateKey }}",
+            "Status":       "RAW",
+            "Source":       "PhantomBuster",
+            "Created At":   "={{ $now.toISO() }}",
+            "Last Seen":    "={{ $now.toISO() }}"
+          }
+        },
+        "options": {}
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CRED_ID",
+          "name": "Airtable Token"
+        }
+      },
+      "notes": "CONFIGURAR: ajustar nombres de columnas al schema real de tu tabla. El campo 'Duplicate Key' es el campo clave para la dedup."
+    },
+    {
+      "id": "node-010",
+      "name": "Prepare OpenAI Prompt",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [1960, 440],
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "fields": {
+          "values": [
+            {
+              "name": "_airtableRecordId",
+              "type": "stringValue",
+              "string": "={{ $json.id }}"
+            },
+            {
+              "name": "_enrichPrompt",
+              "type": "stringValue",
+              "string": "={{ `Analiza este perfil de LinkedIn B2B y devuelve ÚNICAMENTE un JSON válido (sin markdown, sin texto extra):\n\nNombre: ${$json.fields?.['Full Name'] || $json.fullName || ''}\nCargo: ${$json.fields?.Headline || $json.headline || ''}\nEmpresa: ${$json.fields?.Company || $json.company || ''}\nUbicación: ${$json.fields?.Location || $json.location || ''}\n\nFormato de respuesta EXACTO:\n{\"industry\":\"ecommerce|retail|distribution|agency|saas|services|other\",\"estimated_employees\":\"1-10|10-50|50-200|200-500|500+\",\"pain_points\":[\"max 3 items\"],\"tech_signals\":[\"shopify|tiendanube|vtex|magento|etc\"],\"has_ads\":true,\"has_reviews\":true,\"has_ecommerce\":true,\"notes\":\"observación clave 1 línea\"}` }}"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "node-011",
+      "name": "🤖 Enrich Lead (OpenAI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [2180, 440],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'gpt-4o', temperature: 0, response_format: { type: 'json_object' }, messages: [ { role: 'system', content: 'Eres un agente de inteligencia comercial B2B para LatAm. Analizas perfiles de LinkedIn y devuelves ÚNICAMENTE JSON válido, sin texto adicional, sin markdown.' }, { role: 'user', content: $json._enrichPrompt } ] }) }}",
+        "options": {
+          "response": { "response": { "neverError": true } },
+          "timeout": 30000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OPENAI_CRED_ID",
+          "name": "OpenAI API Key"
+        }
+      },
+      "notes": "CONFIGURAR: credential 'OpenAI API Key' → Header Name: Authorization, Value: Bearer sk-TUKEY"
+    },
+    {
+      "id": "node-012",
+      "name": "Parse Response + Apply Scoring",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2400, 440],
+      "parameters": {
+        "jsCode": "// ═══════════════════════════════════════════════════\n// SCORING MATRIX - Givra Tech\n// Fuente de verdad: Sistema de Adquisición de Clientes\n// ═══════════════════════════════════════════════════\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  let enrichment = {};\n\n  // 1. Parse OpenAI response\n  try {\n    const content =\n      item.json?.choices?.[0]?.message?.content ||\n      item.json?.message?.content ||\n      item.json?.content ||\n      '{}';\n    const cleaned = content\n      .replace(/```json\\n?/gi, '')\n      .replace(/```\\n?/g, '')\n      .trim();\n    enrichment = JSON.parse(cleaned);\n  } catch (e) {\n    enrichment = {\n      industry: 'other',\n      estimated_employees: '10-50',\n      pain_points: [],\n      tech_signals: [],\n      has_ads: false,\n      has_reviews: false,\n      has_ecommerce: false,\n      notes: 'parse_error: ' + e.message\n    };\n  }\n\n  // 2. Scoring matrix\n  let score = 0;\n  let productPrimary = 'AI Growth Audit';\n  let productSecondary = 'LeadScoring Pro';\n\n  const ind = (enrichment.industry || '').toLowerCase();\n  const emp = enrichment.estimated_employees || '10-50';\n  const tech = (enrichment.tech_signals || []).map(t => t.toLowerCase());\n  const painCount = (enrichment.pain_points || []).length;\n\n  // ── Industria fit (0-25 pts)\n  if (ind === 'ecommerce' || ind === 'retail') {\n    score += 25;\n    productPrimary = enrichment.has_ads ? 'AdIntel' : 'StoreSpy';\n    productSecondary = 'PricingOptimizer';\n  } else if (ind === 'distribution') {\n    score += 20;\n    productPrimary = 'GeoGrowth';\n    productSecondary = 'AI Growth Audit';\n  } else if (ind === 'agency') {\n    score += 15;\n    productPrimary = 'LeadScoring Pro';\n    productSecondary = 'Ghostwriter-Brand';\n  } else if (ind === 'saas') {\n    score += 12;\n    productPrimary = 'LeadScoring Pro';\n    productSecondary = 'ReviewMining';\n  } else {\n    score += 10;\n  }\n\n  // ── Tamaño empresa (0-20 pts)\n  if (emp === '50-200' || emp === '200-500') score += 20;\n  else if (emp === '10-50') score += 12;\n  else if (emp === '500+') score += 8;\n  else score += 5; // 1-10\n\n  // ── Señales de dolor (0-30 pts)\n  score += Math.min(painCount * 10, 30);\n\n  // ── Señales de presupuesto (0-15 pts)\n  if (enrichment.has_ads) { score += 10; }\n  if (enrichment.has_ecommerce) { score += 5; }\n\n  // ── Accesibilidad (0-10 pts)\n  const hasEmail = !!(item.json._enrichPrompt && item.json.email);\n  if (hasEmail) score += 5;\n  score += 5; // LinkedIn activo (ya está en PhantomBuster)\n\n  // ── Product override por tech stack\n  if (tech.some(t => ['shopify','tiendanube','vtex','magento','woocommerce'].includes(t))) {\n    productPrimary = 'StoreSpy';\n    productSecondary = 'PricingOptimizer';\n  }\n  if (enrichment.has_reviews && ind !== 'ecommerce') {\n    productPrimary = 'ReviewMining';\n    productSecondary = 'GeoGrowth';\n  }\n\n  const tier = score >= 70 ? 'A' : score >= 50 ? 'B' : 'C';\n\n  results.push({\n    json: {\n      ...item.json,\n      // Scoring output (prefixed with _ to avoid Airtable column name conflict)\n      _score:              score,\n      _tier:               tier,\n      _product_primary:    productPrimary,\n      _product_secondary:  productSecondary,\n      _industry:           enrichment.industry || '',\n      _employees:          enrichment.estimated_employees || '',\n      _pain_points:        JSON.stringify(enrichment.pain_points || []),\n      _tech_signals:       JSON.stringify(enrichment.tech_signals || []),\n      _has_ads:            enrichment.has_ads || false,\n      _has_reviews:        enrichment.has_reviews || false,\n      _has_ecommerce:      enrichment.has_ecommerce || false,\n      _enrichment_notes:   enrichment.notes || ''\n    }\n  });\n\n  console.log(`[Scoring] ${item.json.fullName || 'Unknown'} → Score: ${score} | Tier: ${tier} | Product: ${productPrimary}`);\n}\n\nreturn results;"
+      }
+    },
+    {
+      "id": "node-013",
+      "name": "Score ≥ 70?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2620, 440],
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "cond-score",
+              "leftValue": "={{ $json._score }}",
+              "rightValue": 70,
+              "operator": { "type": "number", "operation": "gte" }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "node-014",
+      "name": "📤 Update → QUEUE_OUTREACH",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [2840, 320],
+      "parameters": {
+        "operation": "update",
+        "base": { "__rl": true, "value": "YOUR_AIRTABLE_BASE_ID", "mode": "id" },
+        "table": { "__rl": true, "value": "YOUR_AIRTABLE_TABLE_ID", "mode": "id" },
+        "id": "={{ $json._airtableRecordId || $json.id }}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status":            "QUEUE_OUTREACH",
+            "Score":             "={{ $json._score }}",
+            "Tier":              "={{ $json._tier }}",
+            "Product Primary":   "={{ $json._product_primary }}",
+            "Product Secondary": "={{ $json._product_secondary }}",
+            "Industry":          "={{ $json._industry }}",
+            "Employees Est":     "={{ $json._employees }}",
+            "Pain Points":       "={{ $json._pain_points }}",
+            "Tech Signals":      "={{ $json._tech_signals }}",
+            "Enrichment Notes":  "={{ $json._enrichment_notes }}",
+            "Enriched At":       "={{ $now.toISO() }}"
+          }
+        },
+        "options": {}
+      },
+      "credentials": {
+        "airtableTokenApi": { "id": "YOUR_AIRTABLE_CRED_ID", "name": "Airtable Token" }
+      }
+    },
+    {
+      "id": "node-015",
+      "name": "❄️ Update → COLD",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [2840, 560],
+      "parameters": {
+        "operation": "update",
+        "base": { "__rl": true, "value": "YOUR_AIRTABLE_BASE_ID", "mode": "id" },
+        "table": { "__rl": true, "value": "YOUR_AIRTABLE_TABLE_ID", "mode": "id" },
+        "id": "={{ $json._airtableRecordId || $json.id }}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status":            "COLD",
+            "Score":             "={{ $json._score }}",
+            "Tier":              "={{ $json._tier }}",
+            "Product Primary":   "={{ $json._product_primary }}",
+            "Product Secondary": "={{ $json._product_secondary }}",
+            "Industry":          "={{ $json._industry }}",
+            "Employees Est":     "={{ $json._employees }}",
+            "Pain Points":       "={{ $json._pain_points }}",
+            "Tech Signals":      "={{ $json._tech_signals }}",
+            "Enrichment Notes":  "={{ $json._enrichment_notes }}",
+            "Enriched At":       "={{ $now.toISO() }}"
+          }
+        },
+        "options": {}
+      },
+      "credentials": {
+        "airtableTokenApi": { "id": "YOUR_AIRTABLE_CRED_ID", "name": "Airtable Token" }
+      }
+    },
+    {
+      "id": "node-099",
+      "name": "⛔ Invalid Lead (discard)",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1080, 560],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "▶ Start Manual": {
+      "main": [[ { "node": "GET PhantomBuster Results", "type": "main", "index": 0 } ]]
+    },
+    "⏰ Schedule (Mon+Thu 8AM)": {
+      "main": [[ { "node": "GET PhantomBuster Results", "type": "main", "index": 0 } ]]
+    },
+    "GET PhantomBuster Results": {
+      "main": [[ { "node": "Split & Normalize Leads", "type": "main", "index": 0 } ]]
+    },
+    "Split & Normalize Leads": {
+      "main": [[ { "node": "✅ Valid Lead?", "type": "main", "index": 0 } ]]
+    },
+    "✅ Valid Lead?": {
+      "main": [
+        [ { "node": "Generate Duplicate Key", "type": "main", "index": 0 } ],
+        [ { "node": "⛔ Invalid Lead (discard)", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Generate Duplicate Key": {
+      "main": [[ { "node": "🔍 Search Airtable by DupKey", "type": "main", "index": 0 } ]]
+    },
+    "🔍 Search Airtable by DupKey": {
+      "main": [[ { "node": "🔀 Exists in Airtable?", "type": "main", "index": 0 } ]]
+    },
+    "🔀 Exists in Airtable?": {
+      "main": [
+        [ { "node": "♻️ Update Existing Lead", "type": "main", "index": 0 } ],
+        [ { "node": "✨ Create New Lead",       "type": "main", "index": 0 } ]
+      ]
+    },
+    "✨ Create New Lead": {
+      "main": [[ { "node": "Prepare OpenAI Prompt", "type": "main", "index": 0 } ]]
+    },
+    "Prepare OpenAI Prompt": {
+      "main": [[ { "node": "🤖 Enrich Lead (OpenAI)", "type": "main", "index": 0 } ]]
+    },
+    "🤖 Enrich Lead (OpenAI)": {
+      "main": [[ { "node": "Parse Response + Apply Scoring", "type": "main", "index": 0 } ]]
+    },
+    "Parse Response + Apply Scoring": {
+      "main": [[ { "node": "Score ≥ 70?", "type": "main", "index": 0 } ]]
+    },
+    "Score ≥ 70?": {
+      "main": [
+        [ { "node": "📤 Update → QUEUE_OUTREACH", "type": "main", "index": 0 } ],
+        [ { "node": "❄️ Update → COLD",           "type": "main", "index": 0 } ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "givratech"
+  }
+}

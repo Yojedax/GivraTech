@@ -5,12 +5,12 @@ export default function IndustriesSection() {
     <section className="section-pad" style={{ background: 'var(--surface-0)' }}>
       <div className="container-wide">
         <div className="max-w-2xl mb-14">
-          <div className="badge badge-neon mb-4">Industries</div>
+          <div className="badge badge-neon mb-4">Industrias</div>
           <h2 className="font-display text-4xl lg:text-5xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-            We work with companies that have data and want more
+            Trabajamos con empresas que tienen datos y quieren más
           </h2>
           <p style={{ color: 'var(--text-secondary)' }} className="leading-relaxed">
-            Our projects drive impact in operations, marketing, and customer analytics in sectors where data is an untapped strategic asset.
+            Nuestros proyectos generan impacto en operaciones, marketing y analítica de clientes en sectores donde los datos son un activo estratégico sin explotar.
           </p>
         </div>
 

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Givra Tech Square Logo">
+  <title>Givra Tech</title>
+
+  <defs>
+    <radialGradient id="bgAmbient" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#00C8FF" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#00C8FF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="200" height="200" rx="18" ry="18" fill="#08090E"/>
+  <rect width="200" height="200" rx="18" ry="18" fill="url(#bgAmbient)"/>
+
+  <!--
+    G-NODE SYMBOL — large centered version
+    Scale: 2.25× of the 48×48 source (symbol = 108×108)
+    Placement: centered horizontally, top area vertically
+    Offset: translate(46, 18) scale(2.25)
+
+    Scaled key points (source × 2.25, then + offset):
+    - Arc top-right:  (34×2.25+46, 17×2.25+18) = (122.5, 56.25) ≈ (122, 56)
+    - Arc center:     (22×2.25+46, 24×2.25+18) = (95.5, 72) ≈ (96, 72)
+    - radius:         14×2.25 = 31.5
+    - Arc left:       (8×2.25+46,  24×2.25+18) = (64,    72)
+    - Arc bot-right:  (34×2.25+46, 31×2.25+18) = (122.5, 87.75) ≈ (122, 88)
+    - Crossbar outer: (40×2.25+46, 24×2.25+18) = (136,   72)
+    - Crossbar inner: (32×2.25+46, 24×2.25+18) = (118,   72)
+  -->
+
+  <!-- Glow layer 1 (outermost) -->
+  <path d="M122,56 A31.5,31.5 0 1,0 122,88 L136,88 L136,72 L118,72"
+        stroke="#00C8FF" stroke-width="22" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"
+        opacity="0.05"/>
+
+  <!-- Glow layer 2 -->
+  <path d="M122,56 A31.5,31.5 0 1,0 122,88 L136,88 L136,72 L118,72"
+        stroke="#00C8FF" stroke-width="13" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"
+        opacity="0.12"/>
+
+  <!-- Glow layer 3 (tight) -->
+  <path d="M122,56 A31.5,31.5 0 1,0 122,88 L136,88 L136,72 L118,72"
+        stroke="#00C8FF" stroke-width="7" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"
+        opacity="0.22"/>
+
+  <!-- Main stroke (sharp) -->
+  <path d="M122,56 A31.5,31.5 0 1,0 122,88 L136,88 L136,72 L118,72"
+        stroke="#00C8FF" stroke-width="3.5" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- ─── DATA NODES ─────────────────────────────── -->
+
+  <!-- Node: top-right (primary) -->
+  <circle cx="122" cy="56" r="18" fill="#00C8FF" opacity="0.06"/>
+  <circle cx="122" cy="56" r="11" fill="#00C8FF" opacity="0.14"/>
+  <circle cx="122" cy="56" r="6" fill="#00C8FF" opacity="0.3"/>
+  <circle cx="122" cy="56" r="4" fill="#00C8FF"/>
+
+  <!-- Node: top arc midpoint (secondary — smaller) -->
+  <circle cx="96" cy="40.5" r="9" fill="#00C8FF" opacity="0.06"/>
+  <circle cx="96" cy="40.5" r="5" fill="#00C8FF" opacity="0.14"/>
+  <circle cx="96" cy="40.5" r="2.5" fill="#00C8FF" opacity="0.7"/>
+
+  <!-- Node: leftmost (primary) -->
+  <circle cx="64" cy="72" r="16" fill="#00C8FF" opacity="0.06"/>
+  <circle cx="64" cy="72" r="10" fill="#00C8FF" opacity="0.14"/>
+  <circle cx="64" cy="72" r="5.5" fill="#00C8FF" opacity="0.3"/>
+  <circle cx="64" cy="72" r="3.5" fill="#00C8FF"/>
+
+  <!-- Node: bottom arc midpoint (secondary) -->
+  <circle cx="96" cy="103.5" r="9" fill="#00C8FF" opacity="0.06"/>
+  <circle cx="96" cy="103.5" r="5" fill="#00C8FF" opacity="0.14"/>
+  <circle cx="96" cy="103.5" r="2.5" fill="#00C8FF" opacity="0.7"/>
+
+  <!-- Node: bottom-right (primary) -->
+  <circle cx="122" cy="88" r="18" fill="#00C8FF" opacity="0.06"/>
+  <circle cx="122" cy="88" r="11" fill="#00C8FF" opacity="0.14"/>
+  <circle cx="122" cy="88" r="6" fill="#00C8FF" opacity="0.3"/>
+  <circle cx="122" cy="88" r="4" fill="#00C8FF"/>
+
+  <!-- Node: crossbar outer end (primary) -->
+  <circle cx="136" cy="72" r="18" fill="#00C8FF" opacity="0.06"/>
+  <circle cx="136" cy="72" r="11" fill="#00C8FF" opacity="0.14"/>
+  <circle cx="136" cy="72" r="6" fill="#00C8FF" opacity="0.3"/>
+  <circle cx="136" cy="72" r="4" fill="#00C8FF"/>
+
+  <!-- ─── WORDMARK ──────────────────────────────── -->
+
+  <!-- Thin horizontal rule above text -->
+  <line x1="58" y1="130" x2="142" y2="130" stroke="#1E293B" stroke-width="0.8"/>
+
+  <!-- "GIVRA" -->
+  <text
+    x="100" y="153"
+    text-anchor="middle"
+    font-family="'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="24"
+    font-weight="700"
+    fill="#FFFFFF"
+    letter-spacing="6">GIVRA</text>
+
+  <!-- "TECH" -->
+  <text
+    x="100" y="173"
+    text-anchor="middle"
+    font-family="'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="13"
+    font-weight="300"
+    fill="#00C8FF"
+    letter-spacing="7">TECH</text>
+
+</svg>

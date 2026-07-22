@@ -22,17 +22,17 @@ export default function DemoLogistics() {
     <div className="space-y-6">
       {/* Toggle */}
       <div className="flex items-center gap-3">
-        <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Scenario:</span>
+        <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Escenario:</span>
         <div className="flex rounded-xl p-1" style={{ background: 'var(--surface-1)', border: '1px solid var(--border-light)' }}>
           <button onClick={() => setShowAfter(false)}
             className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${!showAfter ? 'shadow-sm' : ''}`}
             style={!showAfter ? { background: 'var(--surface-2)', color: 'var(--text-primary)' } : { color: 'var(--text-secondary)' }}>
-            Unoptimized
+            Sin Optimizar
           </button>
           <button onClick={() => setShowAfter(true)}
             className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${showAfter ? 'shadow-sm' : ''}`}
             style={showAfter ? { background: '#00d4ff', color: '#000' } : { color: 'var(--text-secondary)' }}>
-            With GivraTech
+            Con GivraTech
           </button>
         </div>
       </div>
@@ -40,11 +40,11 @@ export default function DemoLogistics() {
       {/* KPI cards */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
         {[
-          { label: 'Vehicles',        value: scenario.vehiculos,        unit: '' },
-          { label: 'Distance',        value: scenario.distanciaTotal,   unit: ' km' },
-          { label: 'Avg Time',     value: scenario.tiempoPromedio,   unit: ' hs' },
-          { label: 'Daily Cost',     value: scenario.costoTotal,       unit: '', currency: true },
-          { label: 'Occupancy',        value: scenario.ocupacionPromedio, unit: '%' },
+          { label: 'Vehículos',        value: scenario.vehiculos,        unit: '' },
+          { label: 'Distancia',        value: scenario.distanciaTotal,   unit: ' km' },
+          { label: 'Tiempo Promedio',     value: scenario.tiempoPromedio,   unit: ' hs' },
+          { label: 'Costo Diario',     value: scenario.costoTotal,       unit: '', currency: true },
+          { label: 'Ocupación',        value: scenario.ocupacionPromedio, unit: '%' },
         ].map(k => (
           <div key={k.label} className="card p-4">
             <div className="text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--text-secondary)' }}>{k.label}</div>
@@ -52,7 +52,7 @@ export default function DemoLogistics() {
               {k.currency ? fmt(k.value) : `${k.value.toLocaleString()}${k.unit}`}
             </div>
             {showAfter && (
-              <div className="text-[10px] font-semibold mt-1" style={{ color: '#00d4ff' }}>Optimized ✓</div>
+              <div className="text-[10px] font-semibold mt-1" style={{ color: '#00d4ff' }}>Optimizado ✓</div>
             )}
           </div>
         ))}
@@ -61,8 +61,8 @@ export default function DemoLogistics() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="card p-5">
-          <div className="text-sm font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Before vs After Comparison</div>
-          <div className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>By key indicator</div>
+          <div className="text-sm font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Comparación Antes y Después</div>
+          <div className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>Por indicador clave</div>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={kpiComparacion} margin={{ top:0, right:10, left:-10, bottom:0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
@@ -70,20 +70,20 @@ export default function DemoLogistics() {
               <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
               <Tooltip />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Bar dataKey="antes"   name="Unoptimized" fill="#556178" radius={[4,4,0,0]} />
-              <Bar dataKey="despues" name="With GivraTech"   fill="#00d4ff" radius={[4,4,0,0]} />
+              <Bar dataKey="antes"   name="Sin Optimizar" fill="#556178" radius={[4,4,0,0]} />
+              <Bar dataKey="despues" name="Con GivraTech"   fill="#00d4ff" radius={[4,4,0,0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
         <div className="card p-5">
-          <div className="text-sm font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Efficiency Profile</div>
-          <div className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>Scale 0–100 by dimension</div>
+          <div className="text-sm font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Perfil de Eficiencia</div>
+          <div className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>Escala 0–100 por dimensión</div>
           <ResponsiveContainer width="100%" height={200}>
             <RadarChart data={radarData} margin={{ top:0, right:20, left:20, bottom:0 }}>
               <PolarGrid stroke="rgba(255,255,255,0.06)" />
               <PolarAngleAxis dataKey="metric" tick={{ fontSize: 10, fill: 'var(--text-muted)' }} />
-              <Radar name="Unoptimized" dataKey="before" stroke="#556178" fill="#556178" fillOpacity={0.3} />
-              <Radar name="With GivraTech"   dataKey="after"  stroke="#00d4ff" fill="#00d4ff" fillOpacity={0.25} />
+              <Radar name="Sin Optimizar" dataKey="before" stroke="#556178" fill="#556178" fillOpacity={0.3} />
+              <Radar name="Con GivraTech"   dataKey="after"  stroke="#00d4ff" fill="#00d4ff" fillOpacity={0.25} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
             </RadarChart>
           </ResponsiveContainer>
@@ -92,7 +92,7 @@ export default function DemoLogistics() {
 
       {/* Savings banner */}
       <div className="rounded-2xl p-6" style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)' }}>
-        <div className="text-black/70 text-xs font-semibold uppercase tracking-widest mb-3">Optimization Impact</div>
+        <div className="text-black/70 text-xs font-semibold uppercase tracking-widest mb-3">Impacto de Optimización</div>
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           {kpiComparacion.map(k => (
             <div key={k.kpi}>
@@ -105,12 +105,12 @@ export default function DemoLogistics() {
 
       {/* Stops table */}
       <div className="card p-5">
-        <div className="text-sm font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Delivery Points ({puntos.length})</div>
+        <div className="text-sm font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Puntos de Entrega ({puntos.length})</div>
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border-light)' }}>
-                {['ID','Point','Coordinates','Type','Demand'].map(h => (
+                {['ID','Punto','Coordenadas','Tipo','Demanda'].map(h => (
                   <th key={h} className="text-left pb-2.5 font-semibold uppercase tracking-widest text-[10px] pr-3" style={{ color: 'var(--text-secondary)' }}>{h}</th>
                 ))}
               </tr>
@@ -124,10 +124,10 @@ export default function DemoLogistics() {
                   <td className="pr-3">
                     <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
                       style={{ background: p.tipo === 'deposito' ? 'rgba(0,212,255,0.08)' : 'rgba(29,78,216,0.08)', color: p.tipo === 'deposito' ? '#00d4ff' : '#1d4ed8' }}>
-                      {p.tipo === 'deposito' ? 'warehouse' : p.tipo}
+                      {p.tipo === 'deposito' ? 'almacén' : p.tipo}
                     </span>
                   </td>
-                  <td className="pr-3" style={{ color: 'var(--text-secondary)' }}>{p.demanda ? `${p.demanda} u` : '—'}</td>
+                  <td className="pr-3" style={{ color: 'var(--text-secondary)' }}>{p.demanda ? `${p.demanda} un` : '—'}</td>
                 </tr>
               ))}
             </tbody>

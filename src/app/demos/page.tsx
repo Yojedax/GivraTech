@@ -12,47 +12,47 @@ const demos = [
   {
     id: 'rfm',
     icon: TrendingUp,
-    title: 'Marketing & RFM',
-    subtitle: 'Segmentation & churn',
-    problem: 'Generic campaigns that don\'t convert and customers who leave without warning.',
-    solution: 'Automatic RFM segmentation with propensity scores and recommended actions by customer.',
-    value: 'Up to 4x conversion and -32% churn rate.',
+    title: 'Marketing y RFM',
+    subtitle: 'Segmentación y churn',
+    problem: 'Campañas genéricas que no convierten y clientes que se van sin aviso.',
+    solution: 'Segmentación RFM automática con scores de propensión y acciones recomendadas por cliente.',
+    value: 'Hasta 4x conversión y -32% tasa de churn.',
   },
   {
     id: 'geo',
     icon: MapPin,
-    title: 'Geolocation',
-    subtitle: 'Address quality',
-    problem: 'Dirty address databases that cause failed deliveries and hidden costs.',
-    solution: 'Normalization, validation and geocoding with confidence score per record.',
-    value: 'Up to 94% validation. -60% in failed deliveries.',
+    title: 'Geolocalización',
+    subtitle: 'Calidad de direcciones',
+    problem: 'Bases de datos de direcciones sucias que causan entregas fallidas y costos ocultos.',
+    solution: 'Normalización, validación y geocodificación con score de confianza por registro.',
+    value: 'Hasta 94% validación. -60% en entregas fallidas.',
   },
   {
     id: 'logistics',
     icon: Truck,
-    title: 'Logistics',
-    subtitle: 'Route optimization',
-    problem: 'Manual routes with underutilized vehicles and out-of-control logistics costs.',
-    solution: 'Routing algorithms that minimize distance, time and cost while respecting operational constraints.',
-    value: '-38% in logistics costs. +42% in fleet utilization.',
+    title: 'Logística',
+    subtitle: 'Optimización de rutas',
+    problem: 'Rutas manuales con vehículos subutilizados y costos logísticos fuera de control.',
+    solution: 'Algoritmos de ruteo que minimizan distancia, tiempo y costo respetando restricciones operacionales.',
+    value: '-38% en costos logísticos. +42% en utilización de flota.',
   },
   {
     id: 'retention',
     icon: Users,
-    title: 'Retention',
-    subtitle: 'Commercial actions',
-    problem: 'Strategic customers who decrease usage without the team noticing until they\'re gone.',
-    solution: 'Risk signal monitoring with suggested actions per customer and executive dashboard.',
-    value: 'Early alerts. Recovery of 70% of revenue at risk.',
+    title: 'Retención',
+    subtitle: 'Acciones comerciales',
+    problem: 'Clientes estratégicos que disminuyen uso sin que el equipo lo note hasta que se van.',
+    solution: 'Monitoreo de señales de riesgo con acciones sugeridas por cliente y dashboard ejecutivo.',
+    value: 'Alertas tempranas. Recuperación del 70% de ingresos en riesgo.',
   },
   {
     id: 'transformer',
     icon: Sparkles,
     title: 'AI Transformer',
-    subtitle: 'Your company with AI',
-    problem: 'What would your company look like if you truly implemented data & AI?',
-    solution: 'Enter your website URL and our AI generates a concrete vision of the possible transformation.',
-    value: 'Personalized vision + use cases + investment estimate.',
+    subtitle: 'Tu empresa con IA',
+    problem: '¿Cómo se vería tu empresa si realmente implementaras datos e IA?',
+    solution: 'Ingresa tu URL del sitio web y nuestra IA genera una visión concreta de la transformación posible.',
+    value: 'Visión personalizada + casos de uso + estimación de inversión.',
     highlight: true,
   },
 ]
@@ -72,14 +72,14 @@ export default function DemosPage() {
         <div className="container-wide relative z-10">
           <div className="max-w-3xl">
             <div className="badge mb-4" style={{ background: 'var(--neon-glow)', color: 'var(--neon)' }}>
-              Interactive Demos
+              Demos Interactivos
             </div>
             <h1 className="font-display text-5xl lg:text-6xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-              Touch the data.<br />
-              <span className="gradient-text">Understand the impact.</span>
+              Toca los datos.<br />
+              <span className="gradient-text">Entiende el impacto.</span>
             </h1>
             <p className="text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-              Five interactive demos with realistic mock data. Explore the solutions we would build for your company.
+              Cinco demos interactivos con datos realistas. Explora las soluciones que construiríamos para tu empresa.
             </p>
           </div>
         </div>
@@ -114,7 +114,7 @@ export default function DemosPage() {
                         : { background: 'var(--neon-glow)', color: 'var(--neon)' }
                       }
                     >
-                      AI
+                      IA
                     </span>
                   )}
                 </button>
@@ -128,16 +128,16 @@ export default function DemosPage() {
             style={{ background: 'var(--surface-2)', border: '1px solid var(--border-light)' }}
           >
             <div>
-              <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--text-muted)' }}>Problem</div>
+              <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--text-muted)' }}>Problema</div>
               <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{active.problem}</p>
             </div>
             <div>
-              <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--text-muted)' }}>Solution</div>
+              <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--text-muted)' }}>Solución</div>
               <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{active.solution}</p>
             </div>
             <div>
               <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--neon)' }}>
-                Business Value
+                Valor Empresarial
               </div>
               <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--neon)' }}>
                 {active.value}

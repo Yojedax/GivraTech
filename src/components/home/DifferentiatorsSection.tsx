@@ -3,23 +3,23 @@ import { testimonials } from '@/data/content'
 const differentiators = [
   {
     icon: '◎',
-    title: 'Business First, Technology Second',
-    description: 'We start by understanding what decision the business needs to make, not by choosing the most sophisticated model.',
+    title: 'Negocio Primero, Tecnología Segundo',
+    description: 'Comenzamos comprendiendo qué decisión necesita tomar el negocio, no eligiendo el modelo más sofisticado.',
   },
   {
     icon: '◈',
-    title: 'End-to-End Without Silos',
-    description: 'From raw data to executive dashboard. One team, no handoffs.',
+    title: 'De Extremo a Extremo Sin Silos',
+    description: 'De datos crudos a panel ejecutivo. Un equipo, sin entregas parciales.',
   },
   {
     icon: '◉',
-    title: 'Results in Weeks, Not Months',
-    description: 'Agile methodology with quick wins validated from the first sprint. The client sees impact before final delivery.',
+    title: 'Resultados en Semanas, No Meses',
+    description: 'Metodología ágil con victorias rápidas validadas desde el primer sprint. El cliente ve el impacto antes de la entrega final.',
   },
   {
     icon: '◆',
-    title: 'Solutions Your Team Can Operate',
-    description: 'We document, train, and design for autonomy. We don\'t create dependency.',
+    title: 'Soluciones que tu Equipo Puede Operar',
+    description: 'Documentamos, capacitamos y diseñamos para la autonomía. No creamos dependencia.',
   },
 ]
 
@@ -37,16 +37,16 @@ export default function DifferentiatorsSection() {
               className="badge mb-4 text-xs"
               style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)' }}
             >
-              Why GivraTech
+              Por qué GivraTech
             </div>
             <h2
               className="font-display text-4xl lg:text-5xl font-bold mb-4"
               style={{ color: 'var(--text-primary)' }}
             >
-              Differences that show in the results
+              Diferencias que se ven en los resultados
             </h2>
             <p className="max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-              We're not a software factory or a research team. We're consultants who build solutions that work in the real world.
+              No somos una fábrica de software ni un equipo de investigación. Somos consultores que construimos soluciones que funcionan en el mundo real.
             </p>
           </div>
 
@@ -79,9 +79,9 @@ export default function DifferentiatorsSection() {
       <section className="section-pad" style={{ background: 'var(--surface-1)' }}>
         <div className="container-wide">
           <div className="max-w-xl mb-12">
-            <div className="badge badge-neon mb-4">Testimonials</div>
+            <div className="badge badge-neon mb-4">Testimonios</div>
             <h2 className="font-display text-4xl font-bold" style={{ color: 'var(--text-primary)' }}>
-              What our customers say
+              Qué dicen nuestros clientes
             </h2>
           </div>
 

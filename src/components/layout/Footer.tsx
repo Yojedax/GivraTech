@@ -12,21 +12,21 @@ export default function Footer() {
               <span style={{ color: 'var(--neon)' }}>Givra</span>Tech
             </div>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-              Data & AI consulting.<br />
-              We turn information into decisions that drive impact.
+              Consultoría de Datos e IA.<br />
+              Convertimos información en decisiones que generan impacto.
             </p>
             <div className="mt-4 inline-block text-xs font-semibold tracking-widest uppercase px-3 py-1.5 rounded border"
               style={{ borderColor: 'var(--border-neon)', color: 'var(--neon)', background: 'var(--neon-glow)' }}>
-              From Data to Decision
+              De Datos a Decisión
             </div>
           </div>
 
           {/* Links */}
           <div className="grid grid-cols-2 gap-8">
             <div>
-              <div className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>Site</div>
+              <div className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>Sitio</div>
               <ul className="space-y-2.5">
-                {[['/', 'Home'],['/services','Services'],['/demos','Demos'],['/about','About'],['/contact','Contact']].map(([href, label]) => (
+                {[['/', 'Inicio'],['/services','Servicios'],['/demos','Demostraciones'],['/about','Nosotros'],['/contact','Contacto']].map(([href, label]) => (
                   <li key={href}>
                     <Link href={href} className="text-sm transition-colors hover:text-white" style={{ color: 'var(--text-secondary)' }}>{label}</Link>
                   </li>
@@ -34,9 +34,9 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <div className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>Services</div>
+              <div className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>Servicios</div>
               <ul className="space-y-2.5">
-                {['Marketing & RFM','Churn Prediction','Geolocation','Logistics','Dashboards','AI Agents'].map(s => (
+                {['Marketing y RFM','Predicción de Churn','Geolocalización','Logística','Dashboards','Agentes de IA'].map(s => (
                   <li key={s}><span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{s}</span></li>
                 ))}
               </ul>
@@ -45,14 +45,14 @@ export default function Footer() {
 
           {/* CTA */}
           <div>
-            <div className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>Ready to get started?</div>
+            <div className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>¿Listo para comenzar?</div>
             <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
-              Schedule a 30-minute exploratory call. No cost, no commitment.
+              Agenda una llamada exploratoria de 30 minutos. Sin costo, sin compromiso.
             </p>
             <Link href="/contact"
               className="inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-lg transition-all hover:shadow-neon-sm"
               style={{ background: 'var(--neon)', color: 'var(--surface-0)' }}>
-              Book a Call <ArrowRight size={14} />
+              Agendar Llamada <ArrowRight size={14} />
             </Link>
             <div className="mt-8 flex items-center gap-4">
               <a href="mailto:hola@giatech.ai" className="flex items-center gap-2 text-sm transition-colors hover:text-white" style={{ color: 'var(--text-secondary)' }}>
@@ -66,7 +66,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="container-wide py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
-        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>© {new Date().getFullYear()} GivraTech. All rights reserved.</p>
+        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>© {new Date().getFullYear()} GivraTech. Todos los derechos reservados.</p>
         <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Buenos Aires, Argentina</p>
       </div>
     </footer>

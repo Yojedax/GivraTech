@@ -1,0 +1,446 @@
+{
+  "name": "GivraTech WF3 — Outreach Automático",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "n8n-wf3-manual",
+      "name": "Start Manual",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10,
+              "triggerAtDay": {
+                "value": "2,4"
+              }
+            }
+          ]
+        }
+      },
+      "id": "n8n-wf3-schedule",
+      "name": "Schedule Mar-Jue 10AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        500
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_TABLE_ID"
+        },
+        "filterByFormula": "=AND({Status} = 'QUEUE_OUTREACH', {Score} >= 70)",
+        "returnAll": false,
+        "limit": 30,
+        "sort": {
+          "property": [
+            {
+              "field": "Score",
+              "direction": "desc"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n8n-wf3-read",
+      "name": "Get Top 30 Queue Leads",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        280,
+        400
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CRED_ID",
+          "name": "Airtable GivraTech"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-leads",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "n8n-wf3-hasleads",
+      "name": "Has Leads?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        520,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const f = item.json.fields || item.json;\n  const name = f['Name'] || f.fullName || 'there';\n  const company = f['Company'] || f.company || 'your company';\n  const role = f['Role'] || f.role || '';\n  const product = f['Product Primary'] || f.productPrimary || 'AI Growth Audit';\n  const painPoints = f['Pain Points'] || f.painPoints || '';\n  const industry = f['Industry'] || f.industry || '';\n  const summary = f['Summary'] || f.summary || '';\n  const score = f['Score'] || f.score || 0;\n  const email = f['Email'] || f.email || '';\n  const linkedin = f['LinkedIn URL'] || f.linkedinProfileUrl || '';\n\n  const prompt = `Write a personalized B2B outreach message for a lead.\n\nLead info:\n- Name: ${name}\n- Company: ${company}\n- Role: ${role}\n- Industry: ${industry}\n- Pain points: ${painPoints}\n- Summary: ${summary}\n- Product to offer: ${product}\n\nRules:\n- Maximum 3 short paragraphs\n- Open with a specific observation about their business/industry\n- Mention the problem we solve with a concrete data point\n- CTA: ask for 20 minutes call or yes/no question\n- Tone: colleague who found something relevant, NOT a salesperson\n- NEVER use \"I hope this message finds you well\"\n- Language: Spanish (Latin America)\n- Sign as \"Equipo GivraTech\"\n\nReturn JSON: {\"subject\": \"email subject line\", \"body\": \"the message\", \"channel\": \"email\" or \"linkedin\"}`;\n\n  results.push({\n    json: {\n      airtableRecordId: item.json.id,\n      leadName: name,\n      company: company,\n      email: email,\n      linkedinUrl: linkedin,\n      product: product,\n      score: score,\n      outreachPrompt: prompt,\n      preferredChannel: email ? 'email' : 'linkedin'\n    }\n  });\n}\n\nreturn results;\n"
+      },
+      "id": "n8n-wf3-context",
+      "name": "Build Outreach Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + ($env.OPENAI_API_KEY || 'sk-TU_OPENAI_KEY') }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'gpt-4o', response_format: { type: 'json_object' }, temperature: 0.7, max_tokens: 600, messages: [{ role: 'system', content: 'You are the outreach specialist for GivraTech, a B2B data/AI consulting company in Latin America. Always respond with valid JSON.' }, { role: 'user', content: $json.outreachPrompt }] }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "id": "n8n-wf3-openai",
+      "name": "Generate Outreach Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1020,
+        340
+      ],
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const data = item.json;\n  let message = {};\n\n  try {\n    const choices = data.choices || (data.body && data.body.choices);\n    if (choices && choices[0]) {\n      message = JSON.parse(choices[0].message.content);\n    }\n  } catch (e) {\n    message = {\n      subject: 'GivraTech — Algo que puede interesarte',\n      body: 'Error generating personalized message. Manual review needed.',\n      channel: 'email'\n    };\n  }\n\n  results.push({\n    json: {\n      airtableRecordId: data.airtableRecordId,\n      leadName: data.leadName,\n      company: data.company,\n      email: data.email,\n      linkedinUrl: data.linkedinUrl,\n      product: data.product,\n      score: data.score,\n      preferredChannel: data.preferredChannel,\n      messageSubject: message.subject || '',\n      messageBody: message.body || '',\n      suggestedChannel: message.channel || data.preferredChannel,\n      generatedAt: new Date().toISOString()\n    }\n  });\n}\n\nreturn results;\n"
+      },
+      "id": "n8n-wf3-parse",
+      "name": "Parse Outreach Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-email",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "n8n-wf3-channel",
+      "name": "Has Email?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.instantly.ai/api/v1/lead/add",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ api_key: $env.INSTANTLY_API_KEY || 'TU_INSTANTLY_KEY', campaign_id: $env.INSTANTLY_CAMPAIGN_ID || 'TU_CAMPAIGN_ID', skip_if_in_workspace: true, leads: [{ email: $json.email, first_name: $json.leadName.split(' ')[0], last_name: $json.leadName.split(' ').slice(1).join(' '), company_name: $json.company, custom_variables: { product: $json.product, score: String($json.score), message_body: $json.messageBody, message_subject: $json.messageSubject } }] }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 15000
+        }
+      },
+      "id": "n8n-wf3-instantly",
+      "name": "Send via Instantly (Email)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1780,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "linkedin-note",
+              "name": "outreachNote",
+              "value": "LinkedIn DM — requires PhantomBuster LinkedIn Message Sender agent. Configure manually or use connection request + note.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "n8n-wf3-linkedin",
+      "name": "Queue LinkedIn DM",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1780,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_AIRTABLE_TABLE_ID"
+        },
+        "id": "={{ $json.airtableRecordId }}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "CONTACTED",
+            "Outreach Channel": "={{ $json.email ? 'email' : 'linkedin' }}",
+            "Outreach Message": "={{ $json.messageBody }}",
+            "Outreach Subject": "={{ $json.messageSubject }}",
+            "Last Contact": "={{ new Date().toISOString().split('T')[0] }}",
+            "Follow Up Count": "0",
+            "Contacted At": "={{ new Date().toISOString() }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "n8n-wf3-update",
+      "name": "Update → CONTACTED",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        2060,
+        340
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CRED_ID",
+          "name": "Airtable GivraTech"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Start Manual": {
+      "main": [
+        [
+          {
+            "node": "Get Top 30 Queue Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Mar-Jue 10AM": {
+      "main": [
+        [
+          {
+            "node": "Get Top 30 Queue Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Top 30 Queue Leads": {
+      "main": [
+        [
+          {
+            "node": "Has Leads?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Leads?": {
+      "main": [
+        [
+          {
+            "node": "Build Outreach Context",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Build Outreach Context": {
+      "main": [
+        [
+          {
+            "node": "Generate Outreach Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Outreach Message": {
+      "main": [
+        [
+          {
+            "node": "Parse Outreach Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Outreach Message": {
+      "main": [
+        [
+          {
+            "node": "Has Email?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Email?": {
+      "main": [
+        [
+          {
+            "node": "Send via Instantly (Email)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Queue LinkedIn DM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send via Instantly (Email)": {
+      "main": [
+        [
+          {
+            "node": "Update → CONTACTED",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue LinkedIn DM": {
+      "main": [
+        [
+          {
+            "node": "Update → CONTACTED",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  },
+  "tags": [
+    {
+      "name": "GivraTech"
+    },
+    {
+      "name": "Outreach"
+    }
+  ]
+}

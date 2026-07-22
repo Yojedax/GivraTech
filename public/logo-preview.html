@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Givra Tech — Logo Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #04050A;
+      color: #CBD5E1;
+      font-family: 'Inter', sans-serif;
+      padding: 60px 40px;
+    }
+    .page-title {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 4px;
+      color: #334155;
+      text-transform: uppercase;
+      margin-bottom: 64px;
+    }
+    .section {
+      margin-bottom: 72px;
+    }
+    .section-label {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      color: #1E3A5F;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #0F172A;
+    }
+    .logo-cell {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #08090E;
+      border-radius: 12px;
+      padding: 32px;
+      border: 1px solid #0F172A;
+    }
+    .logo-cell.light-bg {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+    }
+    .logo-row {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .meta {
+      margin-top: 16px;
+      font-size: 10px;
+      color: #1E3A5F;
+      letter-spacing: 1px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    img.svg-logo { max-width: 100%; height: auto; }
+    .divider {
+      border: none;
+      border-top: 1px solid #0A0F1A;
+      margin: 48px 0;
+    }
+    .palette {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+    .swatch-block {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      border: 1px solid #0F172A;
+    }
+    .swatch-hex {
+      font-size: 9px;
+      color: #475569;
+      letter-spacing: 1px;
+    }
+    .swatch-name {
+      font-size: 9px;
+      color: #1E3A5F;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <p class="page-title">Givra Tech &mdash; Logo System &middot; Version 1.0</p>
+
+  <!-- ICON -->
+  <div class="section">
+    <p class="section-label">01 &mdash; Icon / Favicon</p>
+    <div class="logo-row">
+      <div>
+        <div class="logo-cell">
+          <img src="logo-icon.svg" width="96" height="96" class="svg-logo" alt="Givra Tech Icon">
+        </div>
+        <p class="meta">96 × 96 &mdash; Dark background</p>
+      </div>
+      <div>
+        <div class="logo-cell">
+          <img src="logo-icon.svg" width="64" height="64" class="svg-logo" alt="Givra Tech Icon">
+        </div>
+        <p class="meta">64 × 64</p>
+      </div>
+      <div>
+        <div class="logo-cell">
+          <img src="logo-icon.svg" width="48" height="48" class="svg-logo" alt="Givra Tech Icon">
+        </div>
+        <p class="meta">48 × 48</p>
+      </div>
+      <div>
+        <div class="logo-cell">
+          <img src="logo-icon.svg" width="32" height="32" class="svg-logo" alt="Givra Tech Icon">
+        </div>
+        <p class="meta">32 × 32</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- HORIZONTAL -->
+  <div class="section">
+    <p class="section-label">02 &mdash; Horizontal Wordmark</p>
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      <div>
+        <div class="logo-cell" style="display: block; width: fit-content;">
+          <img src="logo-horizontal.svg" width="296" height="72" class="svg-logo" alt="Givra Tech Horizontal">
+        </div>
+        <p class="meta">296 × 72 &mdash; Full size</p>
+      </div>
+      <div>
+        <div class="logo-cell" style="display: block; width: fit-content;">
+          <img src="logo-horizontal.svg" width="200" height="49" class="svg-logo" alt="Givra Tech Horizontal">
+        </div>
+        <p class="meta">200 × 49 &mdash; Compact (website nav)</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SQUARE -->
+  <div class="section">
+    <p class="section-label">03 &mdash; Square Lockup</p>
+    <div class="logo-row">
+      <div>
+        <div class="logo-cell">
+          <img src="logo-square.svg" width="200" height="200" class="svg-logo" alt="Givra Tech Square">
+        </div>
+        <p class="meta">200 × 200 &mdash; LinkedIn / OG</p>
+      </div>
+      <div>
+        <div class="logo-cell">
+          <img src="logo-square.svg" width="120" height="120" class="svg-logo" alt="Givra Tech Square">
+        </div>
+        <p class="meta">120 × 120 &mdash; Profile thumbnail</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- COLOR PALETTE -->
+  <div class="section">
+    <p class="section-label">04 &mdash; Color Palette</p>
+    <div class="palette">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#08090E; border-color:#1E293B;"></div>
+        <span class="swatch-hex">#08090E</span>
+        <span class="swatch-name">Near Black</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#00C8FF;"></div>
+        <span class="swatch-hex">#00C8FF</span>
+        <span class="swatch-name">Neon Cyan</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#FFFFFF;"></div>
+        <span class="swatch-hex">#FFFFFF</span>
+        <span class="swatch-name">Pure White</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#CBD5E1; border-color:#1E293B;"></div>
+        <span class="swatch-hex">#CBD5E1</span>
+        <span class="swatch-name">Steel Gray</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#334155; border-color:#1E293B;"></div>
+        <span class="swatch-hex">#334155</span>
+        <span class="swatch-name">Dark Slate</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#0A1628; border-color:#1E293B;"></div>
+        <span class="swatch-hex">#0A1628</span>
+        <span class="swatch-name">Deep Navy</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

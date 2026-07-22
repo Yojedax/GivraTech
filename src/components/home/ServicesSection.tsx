@@ -7,12 +7,12 @@ export default function ServicesSection() {
     <section className="section-pad" style={{ background: 'var(--surface-1)' }}>
       <div className="container-wide">
         <div className="max-w-2xl mb-14">
-          <div className="badge badge-neon mb-4">Services</div>
+          <div className="badge badge-neon mb-4">Servicios</div>
           <h2 className="font-display text-4xl lg:text-5xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-            Concrete solutions for every business challenge
+            Soluciones concretas para cada desafío empresarial
           </h2>
           <p style={{ color: 'var(--text-secondary)' }} className="leading-relaxed">
-            We work across six areas where data has direct and measurable impact on company results.
+            Trabajamos en seis áreas donde los datos tienen impacto directo y medible en los resultados empresariales.
           </p>
         </div>
 
@@ -45,7 +45,7 @@ export default function ServicesSection() {
 
         <div className="mt-10 text-center">
           <Link href="/services" className="inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:opacity-80" style={{ color: 'var(--neon)' }}>
-            See all services in detail <ArrowRight size={14} />
+            Ver todos los servicios en detalle <ArrowRight size={14} />
           </Link>
         </div>
       </div>
