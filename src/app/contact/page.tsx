@@ -24,6 +24,7 @@ export default function ContactPage() {
   })
   const [sent, setSent]     = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError]   = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -32,8 +33,31 @@ export default function ContactPage() {
   const handleSubmit = async () => {
     if (!form.nombre || !form.email || !form.empresa) return
     setLoading(true)
-    await new Promise((r) => setTimeout(r, 1200))
-    setSent(true)
+    setError('')
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/yojeda@givratech.com.ar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          _subject: `Nueva llamada exploratoria — ${form.empresa}`,
+          _template: 'table',
+          Nombre: form.nombre,
+          Empresa: form.empresa,
+          Email: form.email,
+          Cargo: form.cargo,
+          Desafio: form.desafio,
+          Mensaje: form.mensaje,
+        }),
+      })
+      const data = await res.json()
+      if (data.success === true || data.success === 'true') {
+        setSent(true)
+      } else {
+        setError('No pudimos enviar tu mensaje. Escribinos a hola@givratech.com.ar')
+      }
+    } catch {
+      setError('No pudimos enviar tu mensaje. Escribinos a hola@givratech.com.ar')
+    }
     setLoading(false)
   }
 
@@ -188,6 +212,12 @@ export default function ContactPage() {
                   )}
                 </button>
 
+                {error && (
+                  <p className="text-xs text-center mt-3" style={{ color: '#ef4444' }}>
+                    {error}
+                  </p>
+                )}
+
                 <p className="text-xs text-center mt-3" style={{ color: 'var(--text-muted)' }}>
                   Sin spam. Solo nos comunicamos para agendar la llamada.
                 </p>
@@ -228,15 +258,15 @@ export default function ContactPage() {
               <h3 className="font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Contacto Directo</h3>
               <div className="space-y-3">
                 <a
-                  href="mailto:hola@giatech.ai"
+                  href="mailto:hola@givratech.com.ar"
                   className="flex items-center gap-3 text-sm transition-colors hover:text-white"
                   style={{ color: 'var(--text-secondary)' }}
                 >
                   <Mail size={16} style={{ color: 'var(--neon)' }} />
-                  hola@giatech.ai
+                  hola@givratech.com.ar
                 </a>
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/company/givratech/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-sm transition-colors hover:text-white"

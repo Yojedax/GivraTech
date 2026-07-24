@@ -55,10 +55,10 @@ export default function Footer() {
               Agendar Llamada <ArrowRight size={14} />
             </Link>
             <div className="mt-8 flex items-center gap-4">
-              <a href="mailto:hola@giatech.ai" className="flex items-center gap-2 text-sm transition-colors hover:text-white" style={{ color: 'var(--text-secondary)' }}>
-                <Mail size={14} /> hola@giatech.ai
+              <a href="mailto:hola@givratech.com.ar" className="flex items-center gap-2 text-sm transition-colors hover:text-white" style={{ color: 'var(--text-secondary)' }}>
+                <Mail size={14} /> hola@givratech.com.ar
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm transition-colors hover:text-white" style={{ color: 'var(--text-secondary)' }}>
+              <a href="https://www.linkedin.com/company/givratech/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm transition-colors hover:text-white" style={{ color: 'var(--text-secondary)' }}>
                 <Linkedin size={14} /> LinkedIn
               </a>
             </div>
